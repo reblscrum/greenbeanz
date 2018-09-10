@@ -1,9 +1,9 @@
-require('dotenv').config()
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var api = require('../helper.js');
 var items = require('../database-mongo');
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 var app = express();
 
 // MIDDLEWARE
