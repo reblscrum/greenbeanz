@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
-import ShoppingList from './components/ShoppingList.jsx'; 
+import ShoppingList from './components/ShoppingList.jsx';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       items: [],
       // currentScreen: 'Login',
       // isLoggedIn: false
@@ -39,30 +39,30 @@ class App extends React.Component {
   }
 
 
-  addItem (e) {
+  addItem(e) {
     //send this.state.item to server
-    
+
     let newItem = JSON.parse(e.target.name)
     let add = this.state.shoppingList;
     add.push(newItem);
-    this.setState({shoppingList: add}); 
+    this.setState({ shoppingList: add });
   }
 
-  handleInput (e) {
-    this.setState({item: e.target.value})
+  handleInput(e) {
+    this.setState({ item: e.target.value })
   }
 
   searchItem() {
     $.ajax({
       url: '/api/items',
-      method:'POST',
+      method: 'POST',
       data: {
         item: this.state.item
       },
       success: (res) => {
-        this.setState({items: res});
-        this.setState({item: ''})
-      }, 
+        this.setState({ items: res });
+        this.setState({ item: '' })
+      },
       error: (error) => {
         console.log(error);
       }
@@ -90,28 +90,28 @@ class App extends React.Component {
     })
   }
 
-  render () {
+  render() {
     return (
-    <div>
-      <div className="container">
-        <div id="mySidenav" className="sidenav">
-        <div className="content">
-          <h2> My List</h2>
-          <ShoppingList shopList={this.state.shoppingList} saveList={this.saveList.bind(this)}/>
+      <div>
+        <div className="container">
+          <div id="mySidenav" className="sidenav">
+            <div className="content">
+              <h2> My List</h2>
+              <ShoppingList shopList={this.state.shoppingList} saveList={this.saveList.bind(this)} />
+            </div>
+          </div>
         </div>
-        </div> 
+        <div id="main">
+          <h1>The Green Bean
+        <img src="logo.png" alt="logo" className="logo" />
+          </h1>
+          <div className="formArea">
+            <input type="text" value={this.state.item} onChange={this.handleInput.bind(this)} />
+            <input type="button" value="Search" onClick={this.searchItem.bind(this)} />
+          </div>
+          <List items={this.state.items} addItem={this.addItem.bind(this)} />
+        </div>
       </div>
-      <div id="main">
-      <h1>The Green Bean 
-        <img src="logo.png" alt="logo" className="logo"/>
-      </h1>
-      <div className="formArea">
-      <input type="text" value={this.state.item} onChange={this.handleInput.bind(this)}/>
-      <input type="button" value="Search" onClick={this.searchItem.bind(this)}/>
-      </div>
-      <List items={this.state.items} addItem={this.addItem.bind(this)}/>
-      </div>
-    </div>
     )
   }
 }
