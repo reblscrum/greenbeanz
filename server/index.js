@@ -1,24 +1,20 @@
+require('dotenv').config()
 var express = require('express');
 var bodyParser = require('body-parser');
 var api = require('../helper.js');
-// UNCOMMENT THE DATABASE YOU'D LIKE TO USE
-// var items = require('../database-mysql');
 var items = require('../database-mongo');
-
+const PORT = process.env.PORT || 3000
 var app = express();
 
-// UNCOMMENT FOR REACT
+// MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extend: false}));
+app.use(bodyParser.urlencoded({ extend: false }));
 
-// UNCOMMENT FOR ANGULAR
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules'));
-
+// ROUTES
 app.get('/items', function (req, res) {
-  items.selectAll(function(err, data) {
-    if(err) {
+  items.selectAll(function (err, data) {
+    if (err) {
       res.sendStatus(500);
     } else {
       res.json(data);
@@ -26,7 +22,7 @@ app.get('/items', function (req, res) {
   });
 });
 
-app.post('/api/items', function(req, res) {
+app.post('/api/items', function (req, res) {
   console.log(req.body.item);
   api.walmart(req.body.item, (err, result) => {
     if (err) {
@@ -52,27 +48,27 @@ app.post('/api/items', function(req, res) {
 })
 
 
-app.post('/db/items', function(req, res) {
+app.post('/db/items', function (req, res) {
 
   console.log(req.body.item);
   let cart = req.body.item;
 
   cart.forEach(obj => {
     items.addItem(obj, (err, savedItemName) => {
-      if(err) {
+      if (err) {
         console.log(err);
       } else {
         console.log(savedItemName, 'was saved to the database');
       }
-    }) 
+    })
   })
 
 
-}); 
+});
 
 
 
-app.listen(3000, function() {
+app.listen(PORT, function () {
   console.log('listening on port 3000!');
 });
 
