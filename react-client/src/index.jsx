@@ -15,12 +15,12 @@ class App extends React.Component {
       item: '',
       query: '',
       shoppingList: [
-        { name: "Green Beans", price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
-        { name: "Organic Green Beans", price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
-        { name: "Minced Green Beans", price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
-        { name: "Mashed Green Beans", price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
+        { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
+        { name: 'Organic Green Beans', price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
+        { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
+        { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
       ],
-    }
+    };
   }
 
   componentDidMount() {
@@ -42,14 +42,14 @@ class App extends React.Component {
   addItem(e) {
     //send this.state.item to server
 
-    let newItem = JSON.parse(e.target.name)
+    let newItem = JSON.parse(e.target.name);
     let add = this.state.shoppingList;
     add.push(newItem);
     this.setState({ shoppingList: add });
   }
 
   handleInput(e) {
-    this.setState({ item: e.target.value })
+    this.setState({ item: e.target.value });
   }
 
   searchItem() {
@@ -61,12 +61,12 @@ class App extends React.Component {
       },
       success: (res) => {
         this.setState({ items: res });
-        this.setState({ item: '' })
+        this.setState({ item: '' });
       },
       error: (error) => {
         console.log(error);
       }
-    })
+    });
   }
 
 
@@ -76,7 +76,7 @@ class App extends React.Component {
 
   saveList() {
     $.ajax({
-      url: "/db/items",
+      url: '/db/items',
       method: 'POST',
       data: {
         item: this.state.shoppingList
@@ -87,7 +87,7 @@ class App extends React.Component {
       error: (err) => {
         console.error(err);
       }
-    })
+    });
   }
 
   render() {
@@ -103,7 +103,7 @@ class App extends React.Component {
         </div>
         <div id="main">
           <h1>The Green Bean
-        <img src="logo.png" alt="logo" className="logo" />
+            <img src="logo.png" alt="logo" className="logo" />
           </h1>
           <div className="formArea">
             <input type="text" value={this.state.item} onChange={this.handleInput.bind(this)} />
@@ -112,7 +112,7 @@ class App extends React.Component {
           <List items={this.state.items} addItem={this.addItem.bind(this)} />
         </div>
       </div>
-    )
+    );
   }
 }
 

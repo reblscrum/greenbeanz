@@ -9,7 +9,7 @@ var app = express();
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extend: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // ROUTES
 app.get('/items', function (req, res) {

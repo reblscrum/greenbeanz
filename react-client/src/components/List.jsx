@@ -8,6 +8,6 @@ const List = (props) => (
     <br />
     {props.items.map((item, i) => <ListItem key={i} item={item} addItem={props.addItem} />)}
   </div>
-)
+);
 
 export default List;
