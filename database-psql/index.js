@@ -5,6 +5,7 @@ const PGDATABASE = process.env.USER;
 const PGPASSWORD = null;
 const PGPORT = 5432;
 
+// const client = new Client(process.env.DATABASE_URL + '?ssl=true');
 const client = new Client({
   user: PGUSER,
   host: PGHOST,
@@ -26,7 +27,7 @@ const selectAll = (callback) => {
 };
 
 const insertOne = (itemObj, callback) => {
-  const query = `INSERT INTO items (name, price, description, brand) VALUES ($1, $2, $3, $4)`
+  const query = `INSERT INTO items (id, name, price, description) VALUES ($4, $1, $2, $3) ON CONFLICT (id) DO UPDATE SET price = $2;`;
   const params = [itemObj.name, itemObj.price, itemObj.desc, itemObj.itemId]
   client.query(query, params, (err, data) => {
     if(err) {

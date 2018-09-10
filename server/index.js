@@ -10,17 +10,10 @@ var app = express();
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // ROUTES
 app.get('/items', function (req, res) {
-  // items.selectAll(function (err, data) {
-  //   if (err) {
-  //     res.sendStatus(500);
-  //   } else {
-  //     res.json(data);
-  //   }
-  // });
   db.selectAll(function (err, data) {
     if (err) {
       res.sendStatus(500);
@@ -41,15 +34,25 @@ app.post('/api/items', function (req, res) {
       response = [];
 
       respon.items.map(obj => {
-        response.push({
+        console.log('Inside mapping Function ---> Here is obj', obj);
+        const itemObj = {
           name: obj.name,
           itemId: obj.itemId,
           price: obj.salePrice,
           image: obj.mediumImage,
           desc: obj.shortDescription
-        })
-      })
-      // console.log(response);
+        };
+        db.insertOne(itemObj, (err, savedData) => {
+          if (err) {
+            console.log('Error adding item to DB', err);
+          } else {
+          console.log('Success adding item to DB');
+          }
+        });
+        response.push(itemObj)
+
+      });
+      // console.log('I got that response here', response);
       res.send(response);
     }
   })
@@ -72,7 +75,7 @@ app.post('/db/items', function (req, res) {
   //     }
   //   })
   // })
-
+  console.log('Here is my req.body', req.body);
   let cart = req.body.item;
   cart.forEach(obj => {
     console.log('obj again', obj);
