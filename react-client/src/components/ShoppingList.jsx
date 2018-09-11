@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 class ShoppingList extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editMode: false,
       checked: false,
@@ -24,7 +24,7 @@ class ShoppingList extends React.Component {
 
   editList() {
     let oppState = (!this.state.editMode);
-    this.setState({ editMode: oppState })
+    this.setState({ editMode: oppState });
   }
 
 
@@ -43,7 +43,7 @@ class ShoppingList extends React.Component {
               <div className="id">{stuff.itemId}</div>
               <br />
             </div>
-          )
+          );
         })
         }
 
@@ -59,7 +59,7 @@ class ShoppingList extends React.Component {
           </div>
         ) : <br />}
       </div>
-    )
+    );
   }
 }
 
