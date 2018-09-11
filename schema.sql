@@ -1,4 +1,4 @@
-USE 'testing';
+-- USE 'testing';
 
 DROP TABLE if EXISTS "users";
 CREATE TABLE "users" (
@@ -17,6 +17,7 @@ CREATE TABLE "items" (
 "price" DECIMAL ,
 "description" VARCHAR(255) ,
 "image" VARCHAR(255) ,
+"store_id" INTEGER
 PRIMARY KEY ("id")
 );
 COMMENT ON COLUMN "items"."id" IS 'add id from api call';
@@ -26,6 +27,7 @@ CREATE TABLE "lists" (
 "id"  SERIAL ,
 "budget" INTEGER ,
 "user_id" INTEGER ,
+"list_name" VARCHAR(255) ,
 PRIMARY KEY ("id")
 );
 
