@@ -15,10 +15,10 @@ class App extends React.Component {
       item: '',
       query: '',
       shoppingList: [
-        { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
-        { name: 'Organic Green Beans', price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
-        { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
-        { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
+        { name: 'Green Beans', price: 1, itemId: 1, image: 'blah.png', desc: 'stuff' },
+        { name: 'Organic Green Beans', price: 3, itemId: 2, image: 'blah.png', desc: 'stuff' },
+        { name: 'Minced Green Beans', price: 2.5, itemId: 3, image: 'blah.png', desc: 'stuff' },
+        { name: 'Mashed Green Beans', price: 4, itemId: 4, image: 'blah.png', desc: 'stuff' }
       ],
     };
   }
@@ -75,6 +75,7 @@ class App extends React.Component {
   }
 
   saveList() {
+    console.log('Before hotting server', this.state.shoppingList);
     $.ajax({
       url: '/db/items',
       method: 'POST',
