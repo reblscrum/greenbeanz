@@ -6,18 +6,11 @@ const PGPASSWORD = process.env.PG_PASS || null;
 const PGPORT = process.env.PG_PORT || 5432;
 
 const client = new Client(process.env.DATABASE_URL + '?ssl=true');
-// const client = new Client({
-//   user: PGUSER,
-//   host: PGHOST,
-//   database: PGDATABASE,
-//   password: PGPASSWORD,
-//   port: PGPORT
-// });
 
 client.connect();
 
 const selectAll = (callback) => {
-  const query = `SELECT * FROM items`
+  const query = `SELECT * FROM items;`;
   client.query(query, (err, res) => {
     if (err) {
       callback(err, null);
