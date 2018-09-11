@@ -1,11 +1,12 @@
-require('dotenv').config()
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var api = require('../helper.js');
 var items = require('../database-mongo');
 var db = require('../database-psql/');
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 var app = express();
+const heb = require('../helpers/heb/');
 
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
@@ -28,7 +29,7 @@ app.post('/api/items', function (req, res) {
   console.log(req.body.item);
   api.walmart(req.body.item, (err, result) => {
     if (err) {
-      console.log('error getting back to the server', err)
+      console.log('error getting back to the server', err);
     } else {
       respon = JSON.parse(result.body);
       response = [];
@@ -46,18 +47,18 @@ app.post('/api/items', function (req, res) {
           if (err) {
             console.log('Error adding item to DB', err);
           } else {
-          console.log('Success adding item to DB');
+            console.log('Success adding item to DB');
           }
         });
-        response.push(itemObj)
+        response.push(itemObj);
 
       });
       // console.log('I got that response here', response);
       res.send(response);
     }
-  })
+  });
   // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
-})
+});
 
 //mongoDB 
 app.post('/db/items', function (req, res) {
@@ -80,14 +81,25 @@ app.post('/db/items', function (req, res) {
   cart.forEach(obj => {
     console.log('obj again', obj);
     db.insertOne(obj, (err, savedItems) => {
-      if(err) {
+      if (err) {
         console.log(err);
       }
-      console.log('savedItems is', savedItems)
+      console.log('savedItems is', savedItems);
+    });
+  });
+
+
+});
+
+app.post('/api/heb', (req, res) => {
+  heb.scrape(req.body.query)
+    .then(results => {
+      res.json(results);
     })
-  })
-
-
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
 });
 
 
