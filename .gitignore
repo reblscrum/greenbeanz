@@ -2,3 +2,4 @@ config.js
 react-client/client/dist/bundle.js
 .env
 /node_modules
+/react-client/dist/bundle.js

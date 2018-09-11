@@ -1,7 +1,7 @@
 import React from 'react';
 // import ShoppingList from 'ShoppingList.jsx';
 // import List from './List';
-import Cart from '../components/Cart.jsx'
+import Cart from '../components/Cart.jsx';
 
 class Dashboard extends React.Component {
 
@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
             </div>
             <div className="mainDash">
               <h3 style={{ color: '#7bc57d' }}>Saved Shopping Lists
-              <em className="options" onClick={this.changeScreen.bind(this)}>Create A New List</em>
+                <em className="options" onClick={this.changeScreen.bind(this)}>Create A New List</em>
               </h3>
               {/* <em className="options" onClick={this.changeScreen.bind(this)}>Set Budget</em> */}
               {this.props.existingLists.map((list, i) => {
@@ -38,17 +38,17 @@ class Dashboard extends React.Component {
                     <a style={{ color: '#3fae42' }}> {list.items.length} </a> items.
                     {/* <input type="button" value="Edit List" /> */}
                   </div>
-                )
+                );
               })
               }
             </div>
           </div>
         </div>
-      )
+      );
     } else if (this.state.currentScreen === 'cart') {
       return <Cart shoppingList={this.props.shoppingList} item={this.props.item} items={this.props.items} changeScreen={this.changeScreen.bind(this)} 
         handleInput={this.props.handleInput} search={this.props.search} saveList={this.props.saveList} addItem={this.props.addItem}
-      />
+      />;
     }
   }
 }

@@ -10,8 +10,7 @@ const Home = (props) => {
         <Login handleLogin={props.handleLogin} updateInfo={props.updateInfo} error={props.error} />
       </div>
     </div>
-  )
-
-}
+  );
+};
 
 export default Home;

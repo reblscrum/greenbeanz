@@ -23,7 +23,7 @@ const Cart = (props) => {
         <List items={props.items} addItem={props.addItem} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Cart;
