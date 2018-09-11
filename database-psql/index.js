@@ -17,7 +17,7 @@ const client = new Client(process.env.DATABASE_URL + '?ssl=true');
 client.connect();
 
 const selectAll = (callback) => {
-  const query = `SELECT * FROM items`
+  const query = `SELECT * FROM items;`;
   client.query(query, (err, res) => {
     if (err) {
       callback(err, null);
@@ -28,16 +28,29 @@ const selectAll = (callback) => {
 
 const insertOne = (itemObj, callback) => {
   const query = `INSERT INTO items (id, name, price, description) VALUES ($4, $1, $2, $3) ON CONFLICT (id) DO UPDATE SET price = $2;`;
-  const params = [itemObj.name, itemObj.price, itemObj.desc, itemObj.itemId]
+  const params = [itemObj.name, itemObj.price, itemObj.desc, itemObj.itemId];
   client.query(query, params, (err, data) => {
     if (err) {
-      console.log('error inserting into db')
+      console.log('error inserting into db');
       callback(err, null);
     }
     console.log('Added to db');
     callback(null, data);
-  })
-}
+  });
+};
 
+const deleteItem = (options, callback) => {
+  const query = `DELETE FROM ${options.tableName} WHERE id = ${options.id};`;
+  client.query(query, (err, data) => {
+    if (err) {
+      console.log('Error from DB', err);
+      callback(err, null);
+    }
+    console.log('Success from DB', data);
+    callback(null, data);
+  });
+};
+
+module.exports.deleteItem = deleteItem;
 module.exports.selectAll = selectAll;
 module.exports.insertOne = insertOne;

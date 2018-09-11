@@ -20,7 +20,7 @@ const Cart = (props) => {
           <input type="text" value={props.item} onChange={props.handleInput} />
           <input type="button" value="Search"onClick={props.search} />
         </div>
-        <List items={props.items} addItem={props.addItem} />
+        <List items={props.items} addItem={props.addItem}/>
       </div>
     </div>
   );

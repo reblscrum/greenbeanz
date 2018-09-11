@@ -102,6 +102,24 @@ app.post('/api/heb', (req, res) => {
     });
 });
 
+app.post('/db/remove/items', (req, res) => {
+  //options object should have an uniqueID for which item to be remove
+  //also include the db table to remove from
+  console.log('Here is a req body', req.body);
+  const options = {
+    id: req.body.id,
+    tableName: 'items'
+  };
+  db.deleteItem(options, (err, data) => {
+    if (err) {
+      console.log('Error from the Server', err);
+      res.status(404);
+    } else {
+      console.log('Success from server', data);
+      res.sendStatus(201);
+    } 
+  });
+});
 
 
 app.listen(PORT, function () {
