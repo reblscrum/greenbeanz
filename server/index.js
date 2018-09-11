@@ -102,6 +102,25 @@ app.post('/api/heb', (req, res) => {
     });
 });
 
+app.post('/db/remove/items', (req, res) => {
+  //options object should have an uniqueID for which item to be remove
+  //also include the db table to remove from
+  // const options = {
+  //   id: 'Some uniqueID',
+  //   tableName: 'Name of table data should be found in'
+  // }; 
+  console.log('Here is a req body', req.body);
+  const options = {
+    id: req.body.id,
+    tableName: 'items'
+  };
+  db.deleteItem(options, (err, data) => {
+    if (err) {
+      res.sendStatus(404);
+    }
+    res.sendStatus(201);
+  });
+});
 
 
 app.listen(PORT, function () {

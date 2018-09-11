@@ -54,7 +54,7 @@ class App extends React.Component {
 
   addItem(e) {
     //send this.state.item to server
-
+    console.log('Inside addItem', this.state.item);
     let newItem = JSON.parse(e.target.name);
     let add = this.state.shoppingList;
     add.push(newItem);
