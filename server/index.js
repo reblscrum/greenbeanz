@@ -8,6 +8,29 @@ const PORT = process.env.PORT || 3000;
 var app = express();
 const heb = require('../helpers/heb/');
 
+//HELPER FUNCTIONS
+const saveItemsToDB = function(items, response = []) {
+  items.map(obj => {
+    console.log('Inside mapping Function ---> Here is obj', obj);
+    const itemObj = {
+      name: obj.name || 'name not provided',
+      itemId: obj.itemId || 'id not provided',
+      price: obj.salePrice || 'price not provided',
+      image: obj.mediumImage || 'image not provided',
+      desc: obj.shortDescription || 'desc not provided'
+    };
+    db.insertOne(itemObj, (err, savedData) => {
+      if (err) {
+        console.log('Error adding item to DB', err);
+      } else {
+        console.log('Success adding item to DB');
+      }
+    });
+    response.push(itemObj);
+  });
+  return response;
+};
+
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
@@ -32,27 +55,8 @@ app.post('/api/items', function (req, res) {
       console.log('error getting back to the server', err);
     } else {
       respon = JSON.parse(result.body);
-      response = [];
+      response = saveItemsToDB(respon.items);
 
-      respon.items.map(obj => {
-        console.log('Inside mapping Function ---> Here is obj', obj);
-        const itemObj = {
-          name: obj.name,
-          itemId: obj.itemId,
-          price: obj.salePrice,
-          image: obj.mediumImage,
-          desc: obj.shortDescription
-        };
-        db.insertOne(itemObj, (err, savedData) => {
-          if (err) {
-            console.log('Error adding item to DB', err);
-          } else {
-            console.log('Success adding item to DB');
-          }
-        });
-        response.push(itemObj);
-
-      });
       // console.log('I got that response here', response);
       res.send(response);
     }
