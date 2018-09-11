@@ -1,13 +1,14 @@
-import React from "react";
-
+import React from 'react';
+import $ from 'jquery';
 class ShoppingList extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editMode: false,
-      checked: false,
+      clicked: false,
     };
+    this.render = this.render.bind(this);
   }
 
   calculator() {
@@ -24,10 +25,24 @@ class ShoppingList extends React.Component {
 
   editList() {
     let oppState = (!this.state.editMode);
-    this.setState({ editMode: oppState })
+    this.setState({ editMode: oppState });
   }
+  remove(e) { 
+    const id = e.target.id;
+    console.log('removing', e.target.id);
+    const options = {
+      id
+    };
+    $.post('/db/remove/items', options, (data) => {
+      console.log('Made it into the post');
+      console.log('shopList before splice', this.props.shopList);
+      this.props.shopList.splice(id, 1);
+      console.log('shopList after splice', this.props.shopList);
+      this.forceUpdate();
+    });
 
-
+  }
+  // <input type="checkbox" name={stuff.name} id="" />
   render() {
     // console.log(this.props)
     return (
@@ -36,14 +51,15 @@ class ShoppingList extends React.Component {
           return (
             <div className="indivItem" key={i}>
               {this.state.editMode ?
-                (<input type="checkbox" name={stuff.name} id="" />) : ('')
+                (<input type="button" value="Remove From List" id={i} onClick={this.remove.bind(this)} />)
+                : ('')
               }
               <a> {stuff.name}   <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
               </a>
               <div className="id">{stuff.itemId}</div>
               <br />
             </div>
-          )
+          );
         })
         }
 
@@ -59,7 +75,7 @@ class ShoppingList extends React.Component {
           </div>
         ) : <br />}
       </div>
-    )
+    );
   }
 }
 

@@ -3,8 +3,7 @@
 body {
     height: 100%;
     background-color: #fefdf9;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin: 0px;
 }
 
 .container {
@@ -14,7 +13,7 @@ body {
 
 #mySidenav {
     position: absolute;
-    height: 200%;
+    height: 350%;
     width: 40%;
     right: 0px;
     padding-top: 0px;
@@ -23,6 +22,7 @@ body {
 
 #main {
     width: 60%;
+    height: 100%;
 }
 
 h1 {
@@ -112,6 +112,116 @@ h2 {
 h5 {
     margin-top: 10px;
 }
-/* img {
-    
-} */
+
+#home {
+    height: 600px;
+    /* background-color: #fefdf9;  */
+    background-color: #3b4e5e; 
+}
+.loginLogo {
+    height: 35px;
+    width: 35px;
+}
+
+
+.err {
+    margin-top: 10px;
+    font-weight: bold;
+    color: orangered;
+}
+
+.welcome {
+    color: #fefdf9;
+    text-align: center;
+    font-size: 50px;
+}
+
+.form {
+    text-align: center;
+    color: white;
+}
+.form a {
+    padding-left: 20px;
+}
+.loginContainer {
+    padding-top: 140px;
+    background-color: #3b4e5e; 
+    padding-bottom: 180px;
+}
+.divider {
+    padding-top: 50px;
+}
+
+#dashNav {
+    position: fixed;
+    height: 150px;
+    width: 100%;
+    /* right: 0px; */
+    top: 0px;
+    padding-top: 0px;
+    background-color: #3b4e5e;
+}
+
+#Dashboard {
+    background-color: #fefdf9;
+    height: 100%;
+    height: 1000px;
+}
+
+.mainDash {
+    margin-top: 150px;
+    height: 100%;
+    padding-left: 30px;
+}
+
+.logout {
+    position: absolute;
+    right: 10px;
+    padding-top: 120px;
+}
+
+.titles {
+    font-size: 80px;
+    padding-top: 60px;
+    padding-left: 36%;
+    text-align: center;
+    position: absolute;
+    /* text-decoration-line: underline; */
+    color: #fefdf9;
+}
+
+h3 {
+    padding-top: 20px;
+    font-size: 35px;
+    text-decoration-line: underline;
+}
+
+.savedList {
+    padding: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #f8f3e1;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 80%;
+}
+
+.savedList em {
+    font-size: 20px;
+}
+
+.options {
+    color: #7bc57d;
+    right: 10px;
+    position: fixed;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.back {
+    color: #fefdf9;
+    margin-left: 10px;
+    padding-top: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
