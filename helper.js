@@ -8,15 +8,12 @@ let walmart = (query, callback) => {
   }
 
   request({ 'url': 'http://api.walmartlabs.com/v1/search?', qs: options }, function (err, res, body) {
-
     if (err) {
       callback(err, null);
     } else {
       callback(null, res);
     }
   });
-
-
 }
 
 module.exports.walmart = walmart;

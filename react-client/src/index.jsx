@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import ShoppingList from './components/ShoppingList.jsx';
+import Home from './components/Home.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import getHebData from './services/getHebData.jsx';
 
 
@@ -10,17 +12,26 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoggedIn: false,
+      username: '',
+      password: '',
+      error: false,
+      // data: {
       items: [],
-      // currentScreen: 'Login',
-      // isLoggedIn: false
       item: '',
       query: '',
-      shoppingList: [
-        { name: 'Green Beans', price: 1, itemId: 1, image: 'blah.png', desc: 'stuff' },
-        { name: 'Organic Green Beans', price: 3, itemId: 2, image: 'blah.png', desc: 'stuff' },
-        { name: 'Minced Green Beans', price: 2.5, itemId: 3, image: 'blah.png', desc: 'stuff' },
-        { name: 'Mashed Green Beans', price: 4, itemId: 4, image: 'blah.png', desc: 'stuff' }
+      existingLists: [
+        {name: 'list1', items: [1, 2, 3, 4]}, 
+        {name: 'list2', items: [2, 5, 7]}, 
+        {name: 'list3', items: [2, 5, 7, 2, 5, 8, 3]}
       ],
+      shoppingList: [
+        { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
+        { name: 'Organic Green Beans', price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
+        { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
+        { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
+      ],
+      // }
     };
   }
 
@@ -93,29 +104,30 @@ class App extends React.Component {
     });
   }
 
+  
+  updateUserInfo(e) {
+    this.setState({[e.target.name]: e.target.value});  
+  }
+  
+  handleLogin() {
+    console.log('handled!');
+    console.log(this.state.username, this.state.password);
+    
+    //temporary 
+    this.setState({isLoggedIn: true});
+  }
+  handleLogout () {
+    this.setState({isLoggedIn: false});
+  }
+  
   render() {
-    return (
-      <div>
-        <div className="container">
-          <div id="mySidenav" className="sidenav">
-            <div className="content">
-              <h2> My List</h2>
-              <ShoppingList shopList={this.state.shoppingList} saveList={this.saveList.bind(this)} />
-            </div>
-          </div>
-        </div>
-        <div id="main">
-          <h1>The Green Bean
-            <img src="logo.png" alt="logo" className="logo" />
-          </h1>
-          <div className="formArea">
-            <input type="text" value={this.state.item} onChange={this.handleInput.bind(this)} />
-            <input type="button" value="Search" onClick={this.searchItem.bind(this)} />
-          </div>
-          <List items={this.state.items} addItem={this.addItem.bind(this)} />
-        </div>
-      </div>
-    );
+    if (!this.state.isLoggedIn) {
+      return <Home status={this.state.isLoggedIn} updateInfo={this.updateUserInfo.bind(this)} handleLogin={this.handleLogin.bind(this)} error={this.state.error}/>;
+    } else {
+      return <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList} existingLists={this.state.existingLists} logout={this.handleLogout.bind(this)} 
+        search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
+      />;
+    }
   }
 }
 
