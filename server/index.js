@@ -50,7 +50,7 @@ app.post('/api/items', function (req, res) {
             console.log('Success adding item to DB');
           }
         });
-        response.push(itemObj)
+        response.push(itemObj);
 
       });
       // console.log('I got that response here', response);
@@ -91,17 +91,15 @@ app.post('/db/items', function (req, res) {
 
 });
 
-app.get('/api/heb', (req, res) => {
-  heb.scrape(req.query.q)
+app.post('/api/heb', (req, res) => {
+  heb.scrape(req.body.query)
     .then(results => {
-      console.log(results);
-      res.send(results);
+      res.json(results);
     })
     .catch(err => {
       console.log(err);
-      res.end();
+      res.sendStatus(500);
     });
-  res.end();
 });
 
 

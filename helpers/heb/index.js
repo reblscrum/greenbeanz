@@ -1,32 +1,30 @@
-const searchUrl = 'https://www.heb.com/search/?q=milk';
-
-// const getMilk = (cb) => {
-//   axios.get(searchUrl)
-//     .then(res => {
-//       console.log(res);
-//       cb(null, res);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       cb(err, null);
-//     });
-// };
-
 const puppeteer = require('puppeteer');
 
 let scrape = async (query) => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-  await page.goto('https://www.heb.com/search/?q=' + query);
-  await page.waitFor(500);
-  // Scrape
-  // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a');
-  const result = await page.evaluate(() => {
-    let title = document.querySelector('#ajaxCategoryDisplay > div > ul > li:nth-child(1) > div.responsivegriditem-middle > div.responsivegriditem__title').innerText;
-    // let price = document.querySelector('#ajaxCategoryDisplay > div > ul > li:nth-child(1) > div.responsivegriditem-middle > div.responsivegriditem__title > a > span > span').innerText;
-    return { title };
+  let searchUrl = 'https://www.heb.com/search/?q=' + query;
+
+  return puppeteer.launch({ headless: true }).then(async browser => {
+    const page = await browser.newPage();
+    await page.setJavaScriptEnabled(true);
+    await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+
+    // scrape scrape scrape
+    const result = await page.evaluate(() => {
+      let titleArr = [];
+      let imgArr = [];
+      let priceArr = [];
+      let titles = document.querySelectorAll('div.responsivegriditem-middle > div.responsivegriditem__title > a > span');
+      let imges = document.querySelectorAll('div.responsivegriditem-top > div.cat-list-img > a > img');
+      let prices = document.querySelectorAll('.cat-price > span');
+      titles.forEach(title => { return titleArr.push(title.innerText); });
+      imges.forEach(img => { return imgArr.push(img.src); });
+      prices.forEach(price => { return priceArr.push(price.innerText); });
+      return { titleArr, imgArr, priceArr };
+    });
+    await browser.close();
+    return result;
   });
-  return result;
 };
 
 module.exports = { scrape };

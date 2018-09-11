@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import ShoppingList from './components/ShoppingList.jsx';
+import getHebData from './services/getHebData.jsx';
 
 
 class App extends React.Component {
@@ -36,6 +37,7 @@ class App extends React.Component {
     //     console.log('err', err);
     //   }
     // });
+
   }
 
 
