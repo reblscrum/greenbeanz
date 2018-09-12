@@ -1,24 +1,24 @@
-require("dotenv").config();
-var express = require("express");
-var bodyParser = require("body-parser");
-var api = require("../helper.js");
-var items = require("../database-mongo");
-var db = require("../database-psql/");
+require('dotenv').config();
+var express = require('express');
+var bodyParser = require('body-parser');
+var api = require('../helper.js');
+var items = require('../database-mongo');
+var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
-const heb = require("../helpers/heb/");
-const wholeFoods = require("../helpers/wholeFoods");
+const heb = require('../helpers/heb/');
+const wholeFoods = require('../helpers/wholeFoods');
 
 //HELPER FUNCTIONS
 const reshapeItems = function(items, response = []) {
   items.map(obj => {
     const itemObj = {
-      name: obj.name || "name not provided",
-      price: obj.salePrice || "price not provided",
-      image: obj.mediumImage || "image not provided",
-      store_name: obj.store_name || "store_name not provided",
-      query: obj.store_name || "query not provided",
-      user_id: obj.store_name || "-1"
+      name: obj.name || 'name not provided',
+      price: obj.salePrice || 'price not provided',
+      image: obj.mediumImage || 'image not provided',
+      store_name: obj.store_name || 'store_name not provided',
+      query: obj.query || 'query not provided',
+      user_id: obj.user_id || '-1'
     };
 
     /* Leaving this here db call is still neccessary
@@ -38,7 +38,7 @@ const reshapeItems = function(items, response = []) {
 };
 
 // MIDDLEWARE
-app.use(express.static(__dirname + "/../react-client/dist"));
+app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -48,10 +48,10 @@ app.use(
 
 // USER VERIFICATION
 
-app.post("/db/users", (req, res) => {
+app.post('/db/users', (req, res) => {
   // console.log(req.body);
   // check if user exists in the db,
-  if (req.body.type === "Sign Up") {
+  if (req.body.type === 'Sign Up') {
     db.findUser(req.body.username, (err, bool) => {
       if (err) {
         res.status(500).send();
@@ -61,7 +61,7 @@ app.post("/db/users", (req, res) => {
           // if we find the user, send back an error code.
           res
             .status(401)
-            .send("Sorry, this username is already taken. Please try again.");
+            .send('Sorry, this username is already taken. Please try again.');
         } else {
           // if we do not find a user by this username, add them to the db
           db.addUser(req.body.username, req.body.password, (err, response) => {
@@ -77,13 +77,13 @@ app.post("/db/users", (req, res) => {
     });
   }
   //if so, log them in,
-  if (req.body.type === "Login") {
+  if (req.body.type === 'Login') {
     db.findUser(req.body.username, (err, bool) => {
       if (err) {
         res
           .status(500)
           .send(
-            "Sorry, there is no user by this name. Please sign up for The Green Bean."
+            'Sorry, there is no user by this name. Please sign up for The Green Bean.'
           );
       } else {
         // if we find the user, we need to check their password.
@@ -95,17 +95,17 @@ app.post("/db/users", (req, res) => {
               response.rows[0].password === req.body.password
                 ? res.send()
                 : res
-                  .status(500)
-                  .send(
-                    "Sorry, your password is incorrect. Please try again."
-                  );
+                    .status(500)
+                    .send(
+                      'Sorry, your password is incorrect. Please try again.'
+                    );
             }
           });
         } else {
           res
             .status(401)
             .send(
-              "Sorry, there is no user by this name. Please sign up for The Green Bean."
+              'Sorry, there is no user by this name. Please sign up for The Green Bean.'
             );
         }
       }
@@ -115,7 +115,7 @@ app.post("/db/users", (req, res) => {
 });
 
 // ROUTES
-app.get("/items", function(req, res) {
+app.get('/items', function(req, res) {
   db.selectAll(function(err, data) {
     if (err) {
       res.sendStatus(500);
@@ -125,11 +125,11 @@ app.get("/items", function(req, res) {
   });
 });
 
-app.post("/api/items", function(req, res) {
+app.post('/api/items', function(req, res) {
   console.log(req.body.item);
   api.walmart(req.body.item, (err, result) => {
     if (err) {
-      console.log("error getting back to the server", err);
+      console.log('error getting back to the server', err);
     } else {
       respon = JSON.parse(result.body);
       response = reshapeItems(respon.items);
@@ -141,7 +141,7 @@ app.post("/api/items", function(req, res) {
   // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
 });
 //was /db/items
-app.post("/db/lists", function(req, res) {
+app.post('/db/lists', function(req, res) {
   // let cart = req.body.item;
   // cart.forEach(obj => {
   //   console.log('obj again', obj);
@@ -159,7 +159,7 @@ app.post("/db/lists", function(req, res) {
   const options = req.body;
   db.insertList(options, (err, data) => {
     if (err) {
-      console.log("Error adding list from server", err);
+      console.log('Error adding list from server', err);
     } else {
       // console.log('Added to list from server', data);
       options.shopList.map(itemObj => {
@@ -171,10 +171,10 @@ app.post("/db/lists", function(req, res) {
 
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
-            console.log("Error from server inserting into List_Items", err);
+            console.log('Error from server inserting into List_Items', err);
             // res.sendStatus(404);
           } else {
-            console.log("Success inserting into List_Items", data);
+            console.log('Success inserting into List_Items', data);
             // res.sendStatus(201);
           }
         });
@@ -183,7 +183,7 @@ app.post("/db/lists", function(req, res) {
   });
 });
 
-app.post("/api/heb", (req, res) => {
+app.post('/api/heb', (req, res) => {
   heb
     .scrape(req.body.query)
     .then(results => {
@@ -195,7 +195,7 @@ app.post("/api/heb", (req, res) => {
     });
 });
 
-app.post("/api/wholeFoods", (req, res) => {
+app.post('/api/wholeFoods', (req, res) => {
   wholeFoods
     .scrape(req.body.query)
     .then(results => {
@@ -207,38 +207,40 @@ app.post("/api/wholeFoods", (req, res) => {
     });
 });
 
-app.post("/db/remove/items", (req, res) => {
+app.post('/db/remove/items', (req, res) => {
   //options object should have an uniqueID for which item to be remove
   //also include the db table to remove from
-  console.log("Here is a req body", req.body);
+  console.log('Here is a req body', req.body);
   const options = {
     id: req.body.id,
-    tableName: "items"
+    tableName: 'items'
   };
   db.deleteItem(options, (err, data) => {
     if (err) {
-      console.log("Error from the Server", err);
+      console.log('Error from the Server', err);
       res.status(404);
     } else {
-      console.log("Success from server", data);
+      console.log('Success from server', data);
       res.sendStatus(201);
     }
   });
 });
 
-app.post("/db/items", (req, res) => {
+app.post('/db/items', (req, res) => {
   const body = req.body;
+  console.log('adding an item to the DB, here it is: ');
+  console.log(req.body);
   db.insertOne(body, (err, savedData) => {
     if (err) {
-      console.log("Error insertOne at /db/addOneItem", err);
+      console.log('Error insertOne at /db/addOneItem', err);
       res.send(err);
     } else {
-      console.log("Success inserting at /db/adOneItem", savedData);
+      console.log('Success inserting at /db/adOneItem', savedData);
       res.send(savedData);
     }
   });
 });
 
 app.listen(PORT, function() {
-  console.log("listening on port 3000!");
+  console.log('listening on port 3000!');
 });

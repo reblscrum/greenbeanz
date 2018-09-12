@@ -16,12 +16,11 @@ const queryDatabase = (query, params, callback) => {
   }
 };
 
-const selectAll = (callback) => {
+const selectAll = callback => {
   const query = 'SELECT * FROM items';
   const params = [];
   queryDatabase(query, params, callback);
 };
-
 
 const addUser = (username, password, callback) => {
   const query = 'INSERT INTO users (name, password) VALUES ($1, $2);';
@@ -42,19 +41,28 @@ const checkPassword = (username, callback) => {
 };
 
 const insertOne = (itemObj, callback) => {
-  const query = 'INSERT INTO items (name, price, image, store_name, query, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET price = $2;';
-  const params = [itemObj.name, itemObj.price, itemObj.image, itemObj.store_name, itemObj.query, itemObj.user_id];
+  const query =
+    'INSERT INTO items (name, price, image, store_name, query, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET price = $2;';
+  const params = [
+    itemObj.name,
+    itemObj.price,
+    itemObj.image,
+    itemObj.store_name,
+    itemObj.query,
+    itemObj.user_id
+  ];
   queryDatabase(query, params, callback);
 };
 
 const deleteItem = (options, callback) => {
   const query = 'DELETE FROM items WHERE id = $1;';
   const params = [options.id];
-  queryDatabase(query, params, callback);  
+  queryDatabase(query, params, callback);
 };
 
 const insertList = (options, callback) => {
-  const query = 'INSERT INTO lists (budget, user_id, name) VALUES ($1, $2, $3);';
+  const query =
+    'INSERT INTO lists (budget, user_id, name) VALUES ($1, $2, $3);';
   const params = [options.budget, options.userId, options.listName];
   queryDatabase(query, params, callback);
 };
@@ -65,7 +73,6 @@ const insertListItems = (options, callback) => {
   queryDatabase(query, params, callback);
 };
 
-
 module.exports.selectAll = selectAll;
 module.exports.insertOne = insertOne;
 module.exports.findUser = findUser;
@@ -74,4 +81,3 @@ module.exports.checkPassword = checkPassword;
 module.exports.deleteItem = deleteItem;
 module.exports.insertList = insertList;
 module.exports.insertListItems = insertListItems;
-
