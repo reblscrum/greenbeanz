@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({
 // USER VERIFICATION 
 
 app.post('/db/users', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   // check if user exists in the db, 
   if (req.body.type === 'Sign Up') {
 
