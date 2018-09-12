@@ -4,3 +4,7 @@ react-client/client/dist/bundle.js
 /node_modules
 /react-client/dist/bundle.js
 react-client/dist/bundle.js
+/react-client/dist/app.js
+react-client/dist/app.js
+/react-client/dist/login.js
+react-client/dist/login.js
