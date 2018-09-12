@@ -12,12 +12,13 @@
 
 -- DROP TABLE "items" CASCADE;
 CREATE TABLE "items" (
-"id" INTEGER /* add id from api call */,
+"id" SERIAL /* add id from api call */,
 "name" VARCHAR(255) ,
 "price" DECIMAL ,
-"description" TEXT ,
-"image" TEXT ,
-"store_id" INTEGER ,
+"image" VARCHAR(255) ,
+"store_name" varchar(50),
+"query" varchar(255),
+"user_id" INT,
 PRIMARY KEY ("id")
 );
 COMMENT ON COLUMN "items"."id" IS 'add id from api call';
