@@ -54,7 +54,7 @@ app.post('/db/users', (req, res) => {
         // console.log(bool);
         if (bool) {
           // if we find the user, send back an error code.
-        res.status(401).send('Sorry, this username is already taken. Please try again.');
+          res.status(401).send('Sorry, this username is already taken. Please try again.');
         } else {
           // if we do not find a user by this username, add them to the db
           db.addUser(req.body.username, req.body.password, (err, response) => {
@@ -76,7 +76,7 @@ app.post('/db/users', (req, res) => {
         res.status(500).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');
       } else {
         // if we find the user, we need to check their password.
-        if(bool) {
+        if (bool) {
           db.checkPassword(req.body.username, (err, response) => {
             if (err) {
               res.status(500).send();
@@ -85,7 +85,7 @@ app.post('/db/users', (req, res) => {
             }
           });
         } else {
-          res.status(401).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');          
+          res.status(401).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');
         }
       }
     });
@@ -165,10 +165,9 @@ app.post('/api/heb', (req, res) => {
     });
 });
 
-app.get('/api/wholeFoods', (req, res) => {
-  wholeFoods.scrape()
+app.post('/api/wholeFoods', (req, res) => {
+  wholeFoods.scrape(req.body.query)
     .then(results => {
-      console.log(results);
       res.json(results);
     })
     .catch(err => {
