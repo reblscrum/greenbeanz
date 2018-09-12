@@ -12,12 +12,13 @@ COMMENT ON COLUMN "users"."password" IS 'hash + salt';
 
 DROP TABLE if EXISTS "items";
 CREATE TABLE "items" (
-"id" INTEGER /* add id from api call */,
+"id" SERIAL /* add id from api call */,
 "name" VARCHAR(255) ,
 "price" DECIMAL ,
-"description" VARCHAR(255) ,
 "image" VARCHAR(255) ,
-"store_id" INTEGER
+"store_name" varchar(50),
+"query" varchar(255),
+"user_id" INT,
 PRIMARY KEY ("id")
 );
 COMMENT ON COLUMN "items"."id" IS 'add id from api call';
