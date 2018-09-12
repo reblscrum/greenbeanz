@@ -125,7 +125,7 @@ class App extends React.Component {
       success: (res) => {
         console.log('user: ', res);
         this.setState({isLoggedIn: true});
-        
+        this.setState({error: false});
       },
       error: (err) => {
         // console.log(err.responseText.length);
