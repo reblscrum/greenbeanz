@@ -7,9 +7,10 @@ var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
 const heb = require('../helpers/heb/');
+const wholeFoods = require('../helpers/wholeFoods');
 
 //HELPER FUNCTIONS
-const saveItemsToDB = function(items, response = []) {
+const saveItemsToDB = function (items, response = []) {
   items.map(obj => {
     console.log('Inside mapping Function ---> Here is obj', obj);
     const itemObj = {
@@ -106,6 +107,19 @@ app.post('/api/heb', (req, res) => {
     });
 });
 
+app.get('/api/wholeFoods', (req, res) => {
+  wholeFoods.scrape()
+    .then(results => {
+      console.log(results);
+      res.json(results);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
+
 app.post('/db/remove/items', (req, res) => {
   //options object should have an uniqueID for which item to be remove
   //also include the db table to remove from
@@ -121,7 +135,7 @@ app.post('/db/remove/items', (req, res) => {
     } else {
       console.log('Success from server', data);
       res.sendStatus(201);
-    } 
+    }
   });
 });
 
