@@ -7,9 +7,10 @@ var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
 const heb = require('../helpers/heb/');
+const wholeFoods = require('../helpers/wholeFoods');
 
 //HELPER FUNCTIONS
-const saveItemsToDB = function(items, response = []) {
+const saveItemsToDB = function (items, response = []) {
   items.map(obj => {
     const itemObj = {
       name: obj.name || 'name not provided',
@@ -37,7 +38,65 @@ const saveItemsToDB = function(items, response = []) {
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+
+// USER VERIFICATION 
+
+app.post('/db/users', (req, res) => {
+  // console.log(req.body);
+  // check if user exists in the db, 
+  if (req.body.type === 'Sign Up') {
+
+    db.findUser(req.body.username, (err, bool) => {
+      if (err) {
+        res.status(500).send();
+      } else {
+        // console.log(bool);
+        if (bool) {
+          // if we find the user, send back an error code.
+          res.status(401).send('Sorry, this username is already taken. Please try again.');
+        } else {
+          // if we do not find a user by this username, add them to the db
+          db.addUser(req.body.username, req.body.password, (err, response) => {
+            if (err) {
+              // console.log(err, ' adding to db');
+              res.status(500).send();
+            } else {
+              res.send(response);
+            }
+          });
+        }
+      };
+    });
+  };
+  //if so, log them in, 
+  if (req.body.type === 'Login') {
+    db.findUser(req.body.username, (err, bool) => {
+      if (err) {
+        res.status(500).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');
+      } else {
+        // if we find the user, we need to check their password.
+        if (bool) {
+          db.checkPassword(req.body.username, (err, response) => {
+            if (err) {
+              res.status(500).send();
+            } else {
+              response === req.body.password ? res.send() : res.status(500).send('Sorry, your password is incorrect. Please try again.');
+            }
+          });
+        } else {
+          res.status(401).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');
+        }
+      }
+    });
+  };
+  //else, return error
+});
+
+
 
 // ROUTES
 app.get('/items', function (req, res) {
@@ -121,6 +180,18 @@ app.post('/api/heb', (req, res) => {
     });
 });
 
+app.post('/api/wholeFoods', (req, res) => {
+  wholeFoods.scrape(req.body.query)
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
+
 app.post('/db/remove/items', (req, res) => {
   //options object should have an uniqueID for which item to be remove
   //also include the db table to remove from
@@ -136,7 +207,7 @@ app.post('/db/remove/items', (req, res) => {
     } else {
       console.log('Success from server', data);
       res.sendStatus(201);
-    } 
+    }
   });
 });
 
@@ -164,4 +235,3 @@ app.post('/db/items', (req, res) => {
 app.listen(PORT, function () {
   console.log('listening on port 3000!');
 });
-

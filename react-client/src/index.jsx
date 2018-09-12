@@ -16,6 +16,7 @@ class App extends React.Component {
       username: '',
       password: '',
       error: false,
+      errorMsg: 'Sorry, there was an error logging in. Please try again.',
       // data: {
       items: [],
       item: '',
@@ -118,20 +119,37 @@ class App extends React.Component {
     this.setState({[e.target.name]: e.target.value});  
   }
   
-  handleLogin() {
-    console.log('handled!');
-    console.log(this.state.username, this.state.password);
-    
-    //temporary 
-    this.setState({isLoggedIn: true});
+  handleLogin(e) {
+    console.log(e.target.value);
+    // console.log(this.state.username, this.state.password);
+
+    $.ajax({
+      url: '/db/users',
+      method: 'POST',
+      data: {
+        type: e.target.value,
+        username: this.state.username,
+        password: this.state.password
+      },
+      success: (res) => {
+        console.log('user: ', res);
+        this.setState({isLoggedIn: true});
+        this.setState({error: false});
+      },
+      error: (err) => {
+        // console.log(err.responseText.length);
+        err.responseText.length === 0 ? '' : (this.setState({error: true}, this.setState({errorMsg: err.responseText})));
+      } 
+    });
   }
+
   handleLogout () {
     this.setState({isLoggedIn: false});
   }
   
   render() {
     if (!this.state.isLoggedIn) {
-      return <Home status={this.state.isLoggedIn} updateInfo={this.updateUserInfo.bind(this)} handleLogin={this.handleLogin.bind(this)} error={this.state.error}/>;
+      return <Home status={this.state.isLoggedIn} updateInfo={this.updateUserInfo.bind(this)} handleLogin={this.handleLogin.bind(this)} error={this.state.error} errMsg={this.state.errorMsg}/>;
     } else {
       return <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList} existingLists={this.state.existingLists} logout={this.handleLogout.bind(this)} 
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
