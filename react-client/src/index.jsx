@@ -12,19 +12,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false,
-      username: '',
-      password: '',
-      error: false,
-      errorMsg: 'Sorry, there was an error logging in. Please try again.',
       // data: {
       items: [],
       item: '',
       query: '',
       existingLists: [
-        {name: 'list1', items: [1, 2, 3, 4]}, 
-        {name: 'list2', items: [2, 5, 7]}, 
-        {name: 'list3', items: [2, 5, 7, 2, 5, 8, 3]}
+        { name: 'list1', items: [1, 2, 3, 4] },
+        { name: 'list2', items: [2, 5, 7] },
+        { name: 'list3', items: [2, 5, 7, 2, 5, 8, 3] }
       ],
       shoppingList: [
         { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
@@ -105,51 +100,23 @@ class App extends React.Component {
     });
   }
 
-  
-  updateUserInfo(e) {
-    this.setState({[e.target.name]: e.target.value});  
-  }
-  
-  handleLogin(e) {
-    console.log(e.target.value);
-    // console.log(this.state.username, this.state.password);
-
-    $.ajax({
-      url: '/db/users',
-      method: 'POST',
-      data: {
-        type: e.target.value,
-        username: this.state.username,
-        password: this.state.password
-      },
-      success: (res) => {
-        console.log('user: ', res);
-        this.setState({isLoggedIn: true});
-        this.setState({error: false});
-      },
-      error: (err) => {
-        // console.log(err.responseText.length);
-        err.responseText.length === 0 ? '' : (this.setState({error: true}, this.setState({errorMsg: err.responseText})));
-      } 
-    });
+  handleLogout() {
+    this.setState({ isLoggedIn: false });
   }
 
-  handleLogout () {
-    this.setState({isLoggedIn: false});
-  }
-  
   render() {
-    if (!this.state.isLoggedIn) {
-      return <Home status={this.state.isLoggedIn} updateInfo={this.updateUserInfo.bind(this)} handleLogin={this.handleLogin.bind(this)} error={this.state.error} errMsg={this.state.errorMsg}/>;
-    } else {
-      return <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList} existingLists={this.state.existingLists} logout={this.handleLogout.bind(this)} 
+    return (
+      <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList}
+        existingLists={this.state.existingLists} logout={this.handleLogout.bind(this)}
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
-      />;
-    }
+      />);
   }
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+
+
 
 //dark green 2c852f
 //Lighter 3fae42

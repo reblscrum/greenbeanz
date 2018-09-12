@@ -39,7 +39,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
 // USER VERIFICATION 
 
 app.post('/db/users', (req, res) => {
@@ -66,9 +65,9 @@ app.post('/db/users', (req, res) => {
             }
           });
         }
-      };
+      }
     });
-  };
+  }
   //if so, log them in, 
   if (req.body.type === 'Login') {
     db.findUser(req.body.username, (err, bool) => {
@@ -89,7 +88,7 @@ app.post('/db/users', (req, res) => {
         }
       }
     });
-  };
+  }
   //else, return error
 });
 
