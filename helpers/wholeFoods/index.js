@@ -7,9 +7,11 @@ let scrape = async query => {
   return puppeteer.launch({ headless: true }).then(async browser => {
     const page = await browser.newPage();
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitFor(500);
     await page.waitForSelector('#locationSelectModalContent > div.a-section.a-spacing-medium.a-spacing-top-micro > span > a');
     await page.click('#locationSelectModalContent > div.a-section.a-spacing-medium.a-spacing-top-micro > span > a');
-    await page.waitFor(2000);
+    await page.waitFor(500);
+    await page.waitForSelector('#houdini-change-location-seeallcities-city-Austin');
     await page.click('#houdini-change-location-seeallcities-city-Austin');
     await page.waitForNavigation();
     const result = await page.evaluate(() => {
