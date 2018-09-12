@@ -7,9 +7,12 @@ class ShoppingList extends React.Component {
     this.state = {
       editMode: false,
       clicked: false,
+      listName: ''
     };
-    this.render = this.render.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.addList = this.addList.bind(this);
   }
+
 
   calculator() {
     let total = 0;
@@ -34,19 +37,40 @@ class ShoppingList extends React.Component {
       id
     };
     $.post('/db/remove/items', options, (data) => {
-      console.log('Made it into the post');
       console.log('shopList before splice', this.props.shopList);
       this.props.shopList.splice(id, 1);
       console.log('shopList after splice', this.props.shopList);
       this.forceUpdate();
     });
+  }
 
+  handleChange(e) {
+    console.log('Handling Change', e.target.value);
+    this.setState({ listName: e.target.value});
+  }
+
+  addList() {
+    // console.log('addList fired');
+    //Saves list to DB pass in userId, currently set to 1
+    const options = {
+      listName: this.state.listName,
+      userId: 1,
+      budget: 500,
+      shopList: this.props.shopList
+    };
+    $.post('/db/lists', options, (data) => {
+      console.log('got data back', data);
+    });
   }
   // <input type="checkbox" name={stuff.name} id="" />
   render() {
     // console.log(this.props)
     return (
-      <div className="shoppingList">
+      <div className={this.state.listName}>
+        <label>
+          Name your list
+          <input type="text" value={this.state.listName} onChange={this.handleChange}/>
+        </label>
         {this.props.shopList.map((stuff, i) => {
           return (
             <div className="indivItem" key={i}>
@@ -71,7 +95,7 @@ class ShoppingList extends React.Component {
         {this.props.shopList.length > 0 ? (
           <div>
             <input type="button" value="Edit List" onClick={this.editList.bind(this)} />
-            <input type="button" value="Save List" onClick={this.props.saveList} />
+            <input type="button" value="Save List" onClick={this.addList} />
           </div>
         ) : <br />}
       </div>

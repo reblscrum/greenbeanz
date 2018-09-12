@@ -55,11 +55,16 @@ class App extends React.Component {
 
   addItem(e) {
     //send this.state.item to server
-    console.log('Inside addItem', this.state.item);
-    let newItem = JSON.parse(e.target.name);
+    // console.log('Inside addItem', this.state.item);
+    // let newItem = JSON.parse(e.target.name);
+    const options = JSON.parse(e.target.name);
+    console.log('e.target.name', options);
     let add = this.state.shoppingList;
-    add.push(newItem);
-    this.setState({ shoppingList: add });
+    
+    $.post('/db/items', options, (data) => {
+      add.push(options);  
+      this.setState({ shoppingList: add });
+    });
   }
 
   handleInput(e) {
@@ -88,21 +93,25 @@ class App extends React.Component {
 
   }
 
-  saveList() {
-    console.log('Before hotting server', this.state.shoppingList);
-    $.ajax({
-      url: '/db/items',
-      method: 'POST',
-      data: {
-        item: this.state.shoppingList
-      },
-      success: (res) => {
-        console.log('list has been added');
-      },
-      error: (err) => {
-        console.error('err', err);
-      }
-    });
+  saveList(e) {
+    /*_____________________________________ 
+    moved this function to shoppingList.jsx 
+    _______________________________________*/
+    // console.log('event.target inside save list', e.target);
+    // console.log('Before hitting server', this.state.shoppingList);
+    // $.ajax({
+    //   url: '/db/items',
+    //   method: 'POST',
+    //   data: {
+    //     item: this.state.shoppingList
+    //   },
+    //   success: (res) => {
+    //     console.log('list has been added');
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
   }
 
   
