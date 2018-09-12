@@ -35,7 +35,65 @@ const saveItemsToDB = function (items, response = []) {
 // MIDDLEWARE
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+
+// USER VERIFICATION 
+
+app.post('/db/users', (req, res) => {
+  console.log(req.body);
+  // check if user exists in the db, 
+  if (req.body.type === 'Sign Up') {
+
+    db.findUser(req.body.username, (err, bool) => {
+      if (err) {
+        res.status(500).send();
+      } else {
+        // console.log(bool);
+        if (bool) {
+          // if we find the user, send back an error code.
+        res.status(401).send('Sorry, this username is already taken. Please try again.');
+        } else {
+          // if we do not find a user by this username, add them to the db
+          db.addUser(req.body.username, req.body.password, (err, response) => {
+            if (err) {
+              // console.log(err, ' adding to db');
+              res.status(500).send();
+            } else {
+              res.send(response);
+            }
+          });
+        }
+      };
+    });
+  };
+  //if so, log them in, 
+  if (req.body.type === 'Login') {
+    db.findUser(req.body.username, (err, bool) => {
+      if (err) {
+        res.status(500).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');
+      } else {
+        // if we find the user, we need to check their password.
+        if(bool) {
+          db.checkPassword(req.body.username, (err, response) => {
+            if (err) {
+              res.status(500).send();
+            } else {
+              response === req.body.password ? res.send() : res.status(500).send('Sorry, your password is incorrect. Please try again.');
+            }
+          });
+        } else {
+          res.status(401).send('Sorry, there is no user by this name. Please sign up for The Green Bean.');          
+        }
+      }
+    });
+  };
+  //else, return error
+});
+
+
 
 // ROUTES
 app.get('/items', function (req, res) {
@@ -143,4 +201,3 @@ app.post('/db/remove/items', (req, res) => {
 app.listen(PORT, function () {
   console.log('listening on port 3000!');
 });
-
