@@ -10,28 +10,28 @@ PRIMARY KEY ("id")
 COMMENT ON TABLE "users" IS 'may need a few attributes for oAuth';
 COMMENT ON COLUMN "users"."password" IS 'hash + salt';
 
-DROP TABLE if EXISTS "items";
+DROP TABLE if EXISTS "items" CASCADE;
 CREATE TABLE "items" (
 "id" INTEGER /* add id from api call */,
 "name" VARCHAR(255) ,
 "price" DECIMAL ,
-"description" VARCHAR(255) ,
-"image" VARCHAR(255) ,
-"store_id" INTEGER
+"description" TEXT ,
+"image" TEXT ,
+"store_id" INTEGER ,
 PRIMARY KEY ("id")
 );
 COMMENT ON COLUMN "items"."id" IS 'add id from api call';
 
-DROP TABLE if EXISTS "lists";
+-- DROP TABLE if EXISTS "lists";
 CREATE TABLE "lists" (
 "id"  SERIAL ,
 "budget" INTEGER ,
 "user_id" INTEGER ,
-"list_name" VARCHAR(255) ,
+"name" VARCHAR(255) ,
 PRIMARY KEY ("id")
 );
 
-DROP TABLE if EXISTS "lists_items";
+-- DROP TABLE if EXISTS "lists_items";
 CREATE TABLE "lists_items" (
 "id"  SERIAL ,
 "lists_id" INTEGER ,

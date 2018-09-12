@@ -11,7 +11,6 @@ const heb = require('../helpers/heb/');
 //HELPER FUNCTIONS
 const saveItemsToDB = function(items, response = []) {
   items.map(obj => {
-    console.log('Inside mapping Function ---> Here is obj', obj);
     const itemObj = {
       name: obj.name || 'name not provided',
       itemId: obj.itemId || 'id not provided',
@@ -19,13 +18,17 @@ const saveItemsToDB = function(items, response = []) {
       image: obj.mediumImage || 'image not provided',
       desc: obj.shortDescription || 'desc not provided'
     };
-    db.insertOne(itemObj, (err, savedData) => {
-      if (err) {
-        console.log('Error adding item to DB', err);
-      } else {
-        console.log('Success adding item to DB');
-      }
-    });
+    /* Leaving this here db call is still neccessary
+      Currently just formats response data from walmart api
+      Moved DB saving to onClick for each item */
+
+    // db.insertOne(itemObj, (err, savedData) => {
+    //   if (err) {
+    //     console.log('Error adding item to DB', err);
+    //   } else {
+    //     console.log('Success adding item to DB');
+    //   }
+    // });
     response.push(itemObj);
   });
   return response;
@@ -63,35 +66,47 @@ app.post('/api/items', function (req, res) {
   });
   // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
 });
-
-//mongoDB 
-app.post('/db/items', function (req, res) {
-
-  // console.log(req.body.item);
+//was /db/items
+app.post('/db/lists', function (req, res) {
   // let cart = req.body.item;
-
   // cart.forEach(obj => {
-  //   console.log('what is this obj in cart', obj)
-  //   items.addItem(obj, (err, savedItemName) => {
+  //   console.log('obj again', obj);
+  //   db.insertOne(obj, (err, savedItems) => {
   //     if (err) {
   //       console.log(err);
-  //     } else {
-  //       console.log(savedItemName, 'was saved to the database');
   //     }
-  //   })
-  // })
-  console.log('Here is my req.body', req.body);
-  let cart = req.body.item;
-  cart.forEach(obj => {
-    console.log('obj again', obj);
-    db.insertOne(obj, (err, savedItems) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log('savedItems is', savedItems);
-    });
-  });
+  //     console.log('savedItems is', savedItems);
+  //   });
+  // });
+  // const items = req.body.item;
+  // saveItemsToDB(items);
+  //___________________________________
+  // console.log('Here is the req.body to server', req.body);
+  const options = req.body;
+  db.insertList(options, (err, data) => {
+    if (err) {
+      console.log('Error adding list from server', err);
+    } else {
+      // console.log('Added to list from server', data);
+      options.shopList.map(itemObj => {
+        // console.log('Here are my itemObjs ----------------', itemObj);
+        const moreOptions = {
+          listId: 1,
+          itemId: itemObj.itemId
+        };
 
+        db.insertListItems(moreOptions, (err, data) => {
+          if (err) {
+            console.log('Error from server inserting into List_Items', err);
+            // res.sendStatus(404);
+          } else {
+            console.log('Success inserting into List_Items', data);
+            // res.sendStatus(201);
+          }
+        });
+      });
+    }
+  });
 
 });
 
@@ -122,6 +137,26 @@ app.post('/db/remove/items', (req, res) => {
       console.log('Success from server', data);
       res.sendStatus(201);
     } 
+  });
+});
+
+app.post('/db/items', (req, res) => {
+  const body = req.body;
+  const options = {
+    name: body.name || 'name not provided',
+    itemId: body.itemId || 'id not provided',
+    price: body.price || 'price not provided',
+    image: body.image || 'image not provided',
+    desc: body.desc || 'desc not provided'
+  };
+  db.insertOne(options, (err, savedData) => {
+    if (err) {
+      console.log('Error insertOne at /db/addOneItem', err);
+      res.send(err);
+    } else {
+      console.log('Success inserting at /db/adOneItem', savedData);
+      res.send(savedData);
+    }
   });
 });
 
