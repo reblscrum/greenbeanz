@@ -7,7 +7,7 @@ const queryDatabase = (query, params, callback) => {
   try {
     client.query(query, params, (err, res) => {
       if (err) {
-        throw err;
+        callback(err, null);
       }
       callback(null, res);
     });
@@ -70,10 +70,23 @@ const deleteItem = (options, callback) => {
   queryDatabase(query, params, callback);  
 };
 
+const insertList = (options, callback) => {
+  const query = 'INSERT INTO lists (budget, user_id, name) VALUES ($1, $2, $3);';
+  const params = [options.budget, options.userId, options.listName];
+  queryDatabase(query, params, callback);
+};
+
+const insertListItems = (options, callback) => {
+  const query = 'INSERT INTO lists_items (lists_id, items_id) VALUES ($1, $2);';
+  const params = [options.listId, options.itemId];
+  queryDatabase(query, params, callback);
+};
+
 module.exports.selectAll = selectAll;
 module.exports.insertOne = insertOne;
 module.exports.findUser = findUser;
 module.exports.addUser = addUser;
 module.exports.checkPassword = checkPassword;
 module.exports.deleteItem = deleteItem;
-
+module.exports.insertList = insertList;
+module.exports.insertListItems = insertListItems;
