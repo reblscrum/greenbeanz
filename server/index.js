@@ -92,7 +92,7 @@ app.post("/db/users", (req, res) => {
             if (err) {
               res.status(500).send();
             } else {
-              response === req.body.password
+              response.rows[0].password === req.body.password
                 ? res.send()
                 : res
                   .status(500)
