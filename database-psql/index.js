@@ -7,7 +7,7 @@ const queryDatabase = (query, params, callback) => {
   try {
     client.query(query, params, (err, res) => {
       if (err) {
-        callback(err, null);
+        throw err;
       }
       callback(null, res);
     });
@@ -24,43 +24,26 @@ const selectAll = (callback) => {
 
 
 const addUser = (username, password, callback) => {
-  const query = `INSERT INTO users (name, password) VALUES ($1, $2);`;
+  const query = 'INSERT INTO users (name, password) VALUES ($1, $2);';
   const params = [username, password];
-  client.query(query, params, (err, data) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, data);
-    }
-  });
+  queryDatabase(query, params, callback);
 };
 
 const findUser = (username, callback) => {
-  const query = `SELECT EXISTS (SELECT 1 FROM users WHERE name='${username}');`;
-
-  client.query(query, (err, data) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, data.rows[0].exists);
-    }
-  });
+  const query = 'SELECT EXISTS (SELECT 1 FROM users WHERE name=$1);';
+  const params = [username];
+  queryDatabase(query, params, callback);
 };
 
 const checkPassword = (username, callback) => {
-  const query = `SELECT password FROM users WHERE name='${username}';`;
-  client.query(query, (err, data) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, data.rows[0].password);
-    }
-  });
+  const query = 'SELECT password FROM users WHERE name=$1;';
+  const params = [username];
+  queryDatabase(query, params, callback);
 };
 
 const insertOne = (itemObj, callback) => {
-  const query = 'INSERT INTO items (id, name, price, description) VALUES ($4, $1, $2, $3) ON CONFLICT (id) DO UPDATE SET price = $2;';
-  const params = [itemObj.name, itemObj.price, itemObj.desc, itemObj.itemId];
+  const query = 'INSERT INTO items (name, price, image, store_name, query, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET price = $2;';
+  const params = [itemObj.name, itemObj.price, itemObj.image, itemObj.store_name, itemObj.query, itemObj.user_id];
   queryDatabase(query, params, callback);
 };
 
@@ -82,6 +65,7 @@ const insertListItems = (options, callback) => {
   queryDatabase(query, params, callback);
 };
 
+
 module.exports.selectAll = selectAll;
 module.exports.insertOne = insertOne;
 module.exports.findUser = findUser;
@@ -90,3 +74,4 @@ module.exports.checkPassword = checkPassword;
 module.exports.deleteItem = deleteItem;
 module.exports.insertList = insertList;
 module.exports.insertListItems = insertListItems;
+
