@@ -7,7 +7,8 @@ const queryDatabase = (query, params, callback) => {
   try {
     client.query(query, params, (err, res) => {
       if (err) {
-        callback(err, null);
+        throw err;
+        // callback(err, null);
       }
       callback(null, res);
     });

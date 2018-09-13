@@ -2,7 +2,6 @@ require("dotenv").config();
 var express = require("express");
 var bodyParser = require("body-parser");
 var api = require("../helper.js");
-var items = require("../database-mongo");
 var db = require("../database-psql/");
 const PORT = process.env.PORT || 3000;
 var app = express();
