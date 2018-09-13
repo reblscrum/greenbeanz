@@ -7,7 +7,8 @@ const queryDatabase = (query, params, callback) => {
   try {
     client.query(query, params, (err, res) => {
       if (err) {
-        callback(err, null);
+        throw err;
+        // callback(err, null);
       }
       callback(null, res);
     });
@@ -49,7 +50,7 @@ const addUser = (userObj) => {
       if (!data.rows[0].exists) {
         return promiseQueryDatabase(query, params)
           .then(data => {
-            return 'Successfully signed up!';
+            return 'Successfully signed up. Please log in!';
           })
           .catch(err => {
             console.log(err);

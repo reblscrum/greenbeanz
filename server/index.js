@@ -2,7 +2,6 @@ require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var api = require('../helper.js');
-var items = require('../database-mongo');
 var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -47,7 +46,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 // USER VERIFICATION
 app.post('/users/signup', (req, res) => {
   db.addUser(req.body)
@@ -60,25 +58,24 @@ app.post('/users/signup', (req, res) => {
     });
 });
 
-app.post('/users/login', passport.authenticate('local', { failureRedirect: 'incorrectLogin' }), (req, res) => {
-  res.send('/');
+app.post("/users/login", passport.authenticate('local'), (req, res) => {
+  res.send('/app');
 });
+
 
 app.get('/users/logout',
   function (req, res) {
     req.logout();
-    res.send('/login');
+    res.send('/');
   });
 
 
 // ROUTES
-app.use('/app', express.static(__dirname + '/../react-client/dist/app'));
+app.use('/', express.static(__dirname + "/../react-client/dist/landing"));
 
-app.use('/login', express.static(__dirname + '/../react-client/dist/login'));
+app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
 
-app.get('/', checkUser, (req, res) => {
-  res.redirect('/app');
-});
+app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
