@@ -22,6 +22,10 @@ class Dashboard extends React.Component {
     this.setState({showItems: this.state.showItems + 3 });
   }
 
+  handleShowLess() {
+    this.setState({showItems: this.state.showItems - 3 });
+  }
+
   reset() {
     this.setState({showItems: 3});
   }
@@ -58,6 +62,7 @@ class Dashboard extends React.Component {
     } else if (this.state.currentScreen === 'cart') {
       return <Cart shoppingList={this.props.shoppingList} query={this.props.query} items={this.props.items} changeScreen={this.changeScreen.bind(this)} 
         handleInput={this.props.handleInput} search={this.props.search} saveList={this.props.saveList} addItem={this.props.addItem} showItems={this.state.showItems} showMore={this.handleShowMore.bind(this)}
+        showLess={this.handleShowLess.bind(this)}
       />;
     }
   }

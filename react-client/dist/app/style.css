@@ -230,4 +230,14 @@ h3 {
     color: #3fae42;
     font-weight: bold;
     cursor: pointer;
+ 
+}
+#show {
+    text-align: center;
+    position: absolute;
+    font-weight: bold;
+}
+
+.stores {
+    text-align: center;
 }

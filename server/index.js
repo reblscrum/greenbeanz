@@ -18,8 +18,12 @@ passport.use(new LocalStrategy(
   function (username, password, cb) {
     db.findUserByUsername(username)
       .then(user => {
-        if (user.rowCount === 0) { return cb(null, false); }
-        if (user.rows[0].password !== password) { return cb(null, false); }
+        if (user.rowCount === 0) {
+          return cb(null, false);
+        }
+        if (user.rows[0].password !== password) {
+          return cb(null, false);
+        }
         return cb(null, user.rows[0]);
       })
       .catch(err => {
@@ -34,15 +38,23 @@ passport.serializeUser(function (user, cb) {
 
 passport.deserializeUser(function (id, cb) {
   db.findUserById(id, function (err, user) {
-    if (err) { return cb(err); }
+    if (err) {
+      return cb(err);
+    }
     cb(null, user.rows[0]);
   });
 });
 
 // MIDDLEWARE
-app.use(session({ secret: "reblscrum", resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: "reblscrum",
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -59,7 +71,9 @@ app.post("/users/signup", (req, res) => {
     });
 });
 
-app.post("/users/login", passport.authenticate('local', { failureRedirect: 'incorrectLogin' }), (req, res) => {
+app.post("/users/login", passport.authenticate('local', {
+  failureRedirect: 'incorrectLogin'
+}), (req, res) => {
   res.send('/');
 });
 
@@ -80,7 +94,9 @@ app.get('/', checkUser, (req, res) => {
 
 app.get("/items", checkUser, function (req, res) {
   db.selectAll()
-    .then(data => { return res.json(data); })
+    .then(data => {
+      return res.json(data);
+    })
     .catch(err => {
       console.log(err);
       return res.sendStatus(500);
@@ -105,10 +121,10 @@ app.get("/items", checkUser, function (req, res) {
 app.post("/db/lists", checkUser, function (req, res) {
   // let cart = req.body.item;
   // cart.forEach(obj => {
-    //   console.log('obj again', obj);
+  //   console.log('obj again', obj);
   //   db.insertOne(obj, (err, savedItems) => {
   //     if (err) {
-    //       console.log(err);
+  //       console.log(err);
   //     }
   //     console.log('savedItems is', savedItems);
   //   });
@@ -144,57 +160,72 @@ app.post("/db/lists", checkUser, function (req, res) {
   });
 });
 
-app.post("/api/items", function(req, res) {
+app.post("/api/items", function (req, res) {
   // console.log(req.body.item);
   let allResults = {
     walmart: [],
     wholeFoods: [],
     heb: []
   };
-  // api.walmart(req.body.query, (err, result) => {
-  //   if (err) {
-  //     console.log("error getting back to the server", err);
-  //   } else {
-  //     respon = JSON.parse(result.body);
-  //     response = reshapeItems(respon.items);
-  //     // res.send(response);
-  //     allResults.walmart = response;
-  //     res.send(allResults);
-
-  //     // console.log('inside ',allResults);
-  //   }
-  // });
-  
 
   heb
-  .scrape(req.body.query)
-  .then(results => {
-    // res.json(results);
-    allResults.heb = results;
-    // console.log('inside ',allResults);
-    res.send(allResults);
-  })
-  .catch(err => {
-    console.log(err);
-    res.sendStatus(500);
+    .scrape(req.body.query)
+    .then(results => {
+      // res.json(results);
+      allResults.heb = results;
+    }).then(() => {
+    api.walmart(req.body.query, (err, result) => {
+      if (err) {
+        console.log("error getting back to the server", err);
+      } else {
+        respon = JSON.parse(result.body);
+        response = reshapeItems(respon.items);
+        // res.send(response);
+        allResults.walmart = response;
+        res.send(allResults);
+      }
+    })
   });
+
+  // WHEN CHAINING WHOLE FOODS, THE CALLSTACK EXCEEDS. 
+  
 
   // wholeFoods
   //   .scrape(req.body.query)
   //   .then(results => {
   //     // res.json(results);
-  //     console.log('inside ',results);
+  //     console.log('inside ', results);
   //     allResults.wholeFoods = results;
-  //     res.send(allResults);
+  //     // res.send(allResults);
+  //   })
+  //   .then(() => {
+  //     heb
+  //       .scrape(req.body.query)
+  //       .then(results => {
+  //         // res.json(results);
+  //         allResults.heb = results;
+  //       })
+  //   }).then(() => {
+  //     api.walmart(req.body.query, (err, result) => {
+  //       if (err) {
+  //         console.log("error getting back to the server", err);
+  //       } else {
+  //         respon = JSON.parse(result.body);
+  //         response = reshapeItems(respon.items);
+  //         // res.send(response);
+  //         allResults.walmart = response;
+  //         res.send(allResults);
+  //       }
+  //     });
   //   })
   //   .catch(err => {
   //     console.log(err);
   //     res.sendStatus(500);
-  // });
-  // console.log('outside', allResults);
+    
+
 });
 
-app.post("/api/walmart", function(req, res) {
+app.post("/api/walmart", function (req, res) {
   // console.log(req.body.item);
 
   api.walmart(req.body.query, (err, result) => {
