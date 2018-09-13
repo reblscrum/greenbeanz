@@ -46,7 +46,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 // USER VERIFICATION
 app.post("/users/signup", (req, res) => {
   db.addUser(req.body)
@@ -71,13 +70,13 @@ app.get('/users/logout',
 
 
 // ROUTES
-app.use('/app', express.static(__dirname + "/../react-client/dist/app"));
-
-app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
-
 app.get('/', checkUser, (req, res) => {
   res.redirect('/app');
 });
+
+app.get('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
+
+app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
 app.get("/items", checkUser, function (req, res) {
   db.selectAll()
