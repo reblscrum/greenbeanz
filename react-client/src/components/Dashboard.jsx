@@ -10,12 +10,18 @@ class Dashboard extends React.Component {
     this.state = {
       currentScreen: 'dashboard',
     };
+    this.getLists = this.getLists.bind(this);
   }
 
   changeScreen() {
     this.state.currentScreen === 'dashboard' ? this.setState({ currentScreen: 'cart' }) : this.setState({ currentScreen: 'dashboard' });
   }
 
+  getLists() {
+    $.get('/db/users/lists', (data) => {
+      console.log('Got some data back from getLists', data);
+    });
+  }
 
   render() {
     // console.log(this.props);

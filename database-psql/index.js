@@ -65,6 +65,10 @@ const insertListItems = (options, callback) => {
   queryDatabase(query, params, callback);
 };
 
+const fetchUsersLists = (options, callback) => {
+  // const query = 'SELECT lists'
+}
+
 
 module.exports.selectAll = selectAll;
 module.exports.insertOne = insertOne;

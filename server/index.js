@@ -92,7 +92,7 @@ app.post('/db/users', (req, res) => {
         }
       }
     });
-  };
+  }
   //else, return error
 });
 
@@ -127,20 +127,6 @@ app.post('/api/items', function (req, res) {
 });
 //was /db/items
 app.post('/db/lists', function (req, res) {
-  // let cart = req.body.item;
-  // cart.forEach(obj => {
-  //   console.log('obj again', obj);
-  //   db.insertOne(obj, (err, savedItems) => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //     console.log('savedItems is', savedItems);
-  //   });
-  // });
-  // const items = req.body.item;
-  // saveItemsToDB(items);
-  //___________________________________
-  // console.log('Here is the req.body to server', req.body);
   const options = req.body;
   db.insertList(options, (err, data) => {
     if (err) {
@@ -231,6 +217,9 @@ app.post('/db/items', (req, res) => {
   });
 });
 
+app.get('/db/users/lists', (req, res) => {
+  // db.fetchUsersLists();
+});
 
 app.listen(PORT, function () {
   console.log('listening on port 3000!');
