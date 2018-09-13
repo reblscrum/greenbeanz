@@ -12,9 +12,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // data: {
-      items: [],
-      item: '',
+      items: {
+        walmart: [],
+        wholeFoods: [],
+        heb: []
+      },
       query: '',
       existingLists: [
         { name: 'list1', items: [1, 2, 3, 4] },
@@ -27,7 +29,6 @@ class App extends React.Component {
         { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
         { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
       ],
-      // }
     };
   }
 
@@ -63,7 +64,7 @@ class App extends React.Component {
   }
 
   handleInput(e) {
-    this.setState({ item: e.target.value });
+    this.setState({ query: e.target.value });
   }
 
   searchItem() {
@@ -71,11 +72,12 @@ class App extends React.Component {
       url: '/api/items',
       method: 'POST',
       data: {
-        item: this.state.item
+        query: this.state.query
       },
       success: (res) => {
+        console.log(res);
         this.setState({ items: res });
-        this.setState({ item: '' });
+        this.setState({ query: '' });
       },
       error: (error) => {
         console.log(error);
@@ -115,7 +117,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList}
+      <Dashboard items={this.state.items} query={this.state.query} query={this.state.query} shoppingList={this.state.shoppingList}
         existingLists={this.state.existingLists} logout={this.handleLogout}
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
       />);

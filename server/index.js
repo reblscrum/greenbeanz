@@ -18,8 +18,12 @@ passport.use(new LocalStrategy(
   function (username, password, cb) {
     db.findUserByUsername(username)
       .then(user => {
-        if (user.rowCount === 0) { return cb(null, false); }
-        if (user.rows[0].password !== password) { return cb(null, false); }
+        if (user.rowCount === 0) {
+          return cb(null, false);
+        }
+        if (user.rows[0].password !== password) {
+          return cb(null, false);
+        }
         return cb(null, user.rows[0]);
       })
       .catch(err => {
@@ -34,7 +38,9 @@ passport.serializeUser(function (user, cb) {
 
 passport.deserializeUser(function (id, cb) {
   db.findUserById(id, function (err, user) {
-    if (err) { return cb(err); }
+    if (err) {
+      return cb(err);
+    }
     cb(null, user.rows[0]);
   });
 });
@@ -42,7 +48,9 @@ passport.deserializeUser(function (id, cb) {
 // MIDDLEWARE
 app.use(session({ secret: 'reblscrum', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -79,28 +87,31 @@ app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
-    .then(data => { return res.json(data); })
+    .then(data => {
+      return res.json(data);
+    })
     .catch(err => {
       console.log(err);
       return res.sendStatus(500);
     });
 });
 
-app.post('/api/items', checkUser, function (req, res) {
-  console.log(req.body.item);
-  api.walmart(req.body.item, (err, result) => {
-    if (err) {
-      console.log('error getting back to the server', err);
-    } else {
-      respon = JSON.parse(result.body);
-      response = reshapeItems(respon.items);
+// app.post("/api/items", checkUser, function (req, res) {
+//   console.log(req.body.item);
+//   api.walmart(req.body.item, (err, result) => {
+//     if (err) {
+//       console.log("error getting back to the server", err);
+//     } else {
+//       respon = JSON.parse(result.body);
+//       response = reshapeItems(respon.items);
 
-      // console.log('I got that response here', response);
-      res.send(response);
-    }
-  });
-  // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
-});
+//       // console.log('I got that response here', response);
+//       res.send(response);
+//     }
+//   });
+// });
+
+
 //was /db/items
 app.post('/db/lists', function (req, res) {
   const options = req.body;
@@ -130,6 +141,87 @@ app.post('/db/lists', function (req, res) {
     }
   });
 });
+
+app.post('/api/items', function (req, res) {
+  // console.log(req.body.item);
+  let allResults = {
+    walmart: [],
+    wholeFoods: [],
+    heb: []
+  };
+
+  heb
+    .scrape(req.body.query)
+    .then(results => {
+      // res.json(results);
+      allResults.heb = results;
+    }).then(() => {
+    api.walmart(req.body.query, (err, result) => {
+      if (err) {
+        console.log("error getting back to the server", err);
+      } else {
+        respon = JSON.parse(result.body);
+        response = reshapeItems(respon.items);
+        // res.send(response);
+        allResults.walmart = response;
+        res.send(allResults);
+      }
+    })
+  });
+
+  // WHEN CHAINING WHOLE FOODS, THE CALLSTACK EXCEEDS. 
+  
+
+  // wholeFoods
+  //   .scrape(req.body.query)
+  //   .then(results => {
+  //     // res.json(results);
+  //     console.log('inside ', results);
+  //     allResults.wholeFoods = results;
+  //     // res.send(allResults);
+  //   })
+  //   .then(() => {
+  //     heb
+  //       .scrape(req.body.query)
+  //       .then(results => {
+  //         // res.json(results);
+  //         allResults.heb = results;
+  //       })
+  //   }).then(() => {
+  //     api.walmart(req.body.query, (err, result) => {
+  //       if (err) {
+  //         console.log("error getting back to the server", err);
+  //       } else {
+  //         respon = JSON.parse(result.body);
+  //         response = reshapeItems(respon.items);
+  //         // res.send(response);
+  //         allResults.walmart = response;
+  //         res.send(allResults);
+  //       }
+  //     });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     res.sendStatus(500);
+    
+
+});
+
+app.post('/api/walmart', function (req, res) {
+  // console.log(req.body.item);
+
+  api.walmart(req.body.query, (err, result) => {
+    if (err) {
+      console.log("error getting back to the server", err);
+    } else {
+      respon = JSON.parse(result.body);
+      console.log(respon);
+      response = reshapeItems(respon.items);
+      res.send(response);
+    }
+  });
+});
+
 
 app.post('/api/heb', checkUser, (req, res) => {
   heb
