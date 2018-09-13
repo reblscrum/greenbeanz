@@ -75,6 +75,7 @@ class App extends React.Component {
         query: this.state.query
       },
       success: (res) => {
+        console.log(res);
         this.setState({ items: res });
         this.setState({ query: '' });
       },

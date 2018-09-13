@@ -151,38 +151,33 @@ app.post("/api/items", function(req, res) {
     wholeFoods: [],
     heb: []
   };
-  api.walmart(req.body.item, (err, result) => {
-    if (err) {
-      console.log("error getting back to the server", err);
-    } else {
-      respon = JSON.parse(result.body);
-      response = reshapeItems(respon.items);
-      // res.send(response);
-      allResults.walmart = response;
-      // console.log('inside ',allResults);
-    }
-  });
-  // new Promise(function(resolve, reject) {
-  //   api.walmart(req.body.item).then(result => {
+  // api.walmart(req.body.query, (err, result) => {
+  //   if (err) {
+  //     console.log("error getting back to the server", err);
+  //   } else {
   //     respon = JSON.parse(result.body);
   //     response = reshapeItems(respon.items);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   })
+  //     // res.send(response);
+  //     allResults.walmart = response;
+  //     res.send(allResults);
+
+  //     // console.log('inside ',allResults);
+  //   }
   // });
 
-  // heb
-  // .scrape(req.body.query)
-  // .then(results => {
-  //   // res.json(results);
-  //   allResults.heb = results;
-  //   console.log('inside ',allResults);
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  //   res.sendStatus(500);
-  // });
+
+  heb
+  .scrape(req.body.query)
+  .then(results => {
+    // res.json(results);
+    allResults.heb = results;
+    console.log('inside ',allResults);
+    res.send(allResults);
+  })
+  .catch(err => {
+    console.log(err);
+    res.sendStatus(500);
+  });
 
   // wholeFoods
   //   .scrape(req.body.item)
@@ -196,7 +191,6 @@ app.post("/api/items", function(req, res) {
   //     res.sendStatus(500);
   // });
   // console.log('outside', allResults);
-  res.send(allResults);
 });
 
 app.post("/api/walmart", function(req, res) {
