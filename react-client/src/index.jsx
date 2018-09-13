@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import ShoppingList from './components/ShoppingList.jsx';
-import Home from './components/Home.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import getHebData from './services/getHebData.jsx';
+import logoutService from './services/logoutService.jsx';
 
 
 class App extends React.Component {
@@ -55,9 +55,9 @@ class App extends React.Component {
     const options = JSON.parse(e.target.name);
     console.log('e.target.name', options);
     let add = this.state.shoppingList;
-    
+
     $.post('/db/items', options, (data) => {
-      add.push(options);  
+      add.push(options);
       this.setState({ shoppingList: add });
     });
   }
@@ -109,14 +109,14 @@ class App extends React.Component {
     // });
   }
 
-  handleLogout() {
-    this.setState({ isLoggedIn: false });
+  handleLogout = () => {
+    logoutService();
   }
 
   render() {
     return (
       <Dashboard items={this.state.items} item={this.state.item} query={this.state.query} shoppingList={this.state.shoppingList}
-        existingLists={this.state.existingLists} logout={this.handleLogout.bind(this)}
+        existingLists={this.state.existingLists} logout={this.handleLogout}
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
       />);
   }

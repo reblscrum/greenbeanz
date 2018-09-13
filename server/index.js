@@ -8,124 +8,88 @@ const PORT = process.env.PORT || 3000;
 var app = express();
 const heb = require("../helpers/heb/");
 const wholeFoods = require("../helpers/wholeFoods");
+const session = require("express-session");
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const checkUser = require('../helpers/checkUser');
+const reshapeItems = require('../helpers/reshapeItems');
 
-//HELPER FUNCTIONS
-const reshapeItems = function(items, response = []) {
-  items.map(obj => {
-    const itemObj = {
-      name: obj.name || "name not provided",
-      price: obj.salePrice || "price not provided",
-      image: obj.mediumImage || "image not provided",
-      store_name: obj.store_name || "store_name not provided",
-      query: obj.store_name || "query not provided",
-      user_id: obj.store_name || "-1"
-    };
+// Passport strategy
+passport.use(new LocalStrategy(
+  function (username, password, cb) {
+    db.findUserByUsername(username)
+      .then(user => {
+        if (user.rowCount === 0) { return cb(null, false); }
+        if (user.rows[0].password !== password) { return cb(null, false); }
+        return cb(null, user.rows[0]);
+      })
+      .catch(err => {
+        return cb(err);
+      });
+  }));
 
-    /* Leaving this here db call is still neccessary
-      Currently just formats response data from walmart api
-      Moved DB saving to onClick for each item */
+// Configure Passport authenticated session persistence.
+passport.serializeUser(function (user, cb) {
+  cb(null, user.id);
+});
 
-    // db.insertOne(itemObj, (err, savedData) => {
-    //   if (err) {
-    //     console.log('Error adding item to DB', err);
-    //   } else {
-    //     console.log('Success adding item to DB');
-    //   }
-    // });
-    response.push(itemObj);
+passport.deserializeUser(function (id, cb) {
+  db.findUserById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user.rows[0]);
   });
-  return response;
-};
+});
 
 // MIDDLEWARE
-app.use(express.static(__dirname + "/../react-client/dist"));
+app.use(session({ secret: "reblscrum", resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // USER VERIFICATION
-
-app.post("/db/users", (req, res) => {
-  // console.log(req.body);
-  // check if user exists in the db,
-  if (req.body.type === "Sign Up") {
-    db.findUser(req.body.username, (err, bool) => {
-      if (err) {
-        res.status(500).send();
-      } else {
-        console.log(bool.rows[0].exists);
-        if (bool.rows[0].exists) {
-          // if we find the user, send back an error code.
-          res
-            .status(401)
-            .send("Sorry, this username is already taken. Please try again.");
-        } else {
-          // if we do not find a user by this username, add them to the db
-          db.addUser(req.body.username, req.body.password, (err, response) => {
-            if (err) {
-              // console.log(err, ' adding to db');
-              res.status(500).send();
-            } else {
-              res.send(response);
-            }
-          });
-        }
-      }
+app.post("/users/signup", (req, res) => {
+  db.addUser(req.body)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
     });
-  }
-  //if so, log them in,
-  if (req.body.type === "Login") {
-    db.findUser(req.body.username, (err, bool) => {
-      if (err) {
-        res
-          .status(500)
-          .send(
-            "Sorry, there is no user by this name. Please sign up for The Green Bean."
-          );
-      } else {
-        // if we find the user, we need to check their password.
-        if (bool) {
-          db.checkPassword(req.body.username, (err, response) => {
-            if (err) {
-              res.status(500).send();
-            } else {
-              response.rows[0].password === req.body.password
-                ? res.send()
-                : res
-                  .status(500)
-                  .send(
-                    "Sorry, your password is incorrect. Please try again."
-                  );
-            }
-          });
-        } else {
-          res
-            .status(401)
-            .send(
-              "Sorry, there is no user by this name. Please sign up for The Green Bean."
-            );
-        }
-      }
-    });
-  }
-  //else, return error
 });
+
+app.post("/users/login", passport.authenticate('local', { failureRedirect: 'incorrectLogin' }), (req, res) => {
+  res.send('/');
+});
+
+app.get('/users/logout',
+  function (req, res) {
+    req.logout();
+    res.send('/login');
+  });
+
 
 // ROUTES
-app.get("/items", function(req, res) {
-  db.selectAll(function(err, data) {
-    if (err) {
-      res.sendStatus(500);
-    } else {
-      res.json(data);
-    }
-  });
+app.use('/app', express.static(__dirname + "/../react-client/dist/app"));
+
+app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
+
+app.get('/', checkUser, (req, res) => {
+  res.redirect('/app');
 });
 
-app.post("/api/items", function(req, res) {
+app.get("/items", checkUser, function (req, res) {
+  db.selectAll()
+    .then(data => { return res.json(data); })
+    .catch(err => {
+      console.log(err);
+      return res.sendStatus(500);
+    });
+});
+
+app.post("/api/items", checkUser, function (req, res) {
   console.log(req.body.item);
   api.walmart(req.body.item, (err, result) => {
     if (err) {
@@ -141,7 +105,7 @@ app.post("/api/items", function(req, res) {
   // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
 });
 //was /db/items
-app.post("/db/lists", function(req, res) {
+app.post("/db/lists", checkUser, function (req, res) {
   // let cart = req.body.item;
   // cart.forEach(obj => {
   //   console.log('obj again', obj);
@@ -183,7 +147,7 @@ app.post("/db/lists", function(req, res) {
   });
 });
 
-app.post("/api/heb", (req, res) => {
+app.post("/api/heb", checkUser, (req, res) => {
   heb
     .scrape(req.body.query)
     .then(results => {
@@ -195,7 +159,7 @@ app.post("/api/heb", (req, res) => {
     });
 });
 
-app.post("/api/wholeFoods", (req, res) => {
+app.post("/api/wholeFoods", checkUser, (req, res) => {
   wholeFoods
     .scrape(req.body.query)
     .then(results => {
@@ -207,7 +171,7 @@ app.post("/api/wholeFoods", (req, res) => {
     });
 });
 
-app.post("/db/remove/items", (req, res) => {
+app.post("/db/remove/items", checkUser, (req, res) => {
   //options object should have an uniqueID for which item to be remove
   //also include the db table to remove from
   console.log("Here is a req body", req.body);
@@ -226,7 +190,7 @@ app.post("/db/remove/items", (req, res) => {
   });
 });
 
-app.post("/db/items", (req, res) => {
+app.post("/db/items", checkUser, (req, res) => {
   const body = req.body;
   db.insertOne(body, (err, savedData) => {
     if (err) {
@@ -239,6 +203,6 @@ app.post("/db/items", (req, res) => {
   });
 });
 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("listening on port 3000!");
 });

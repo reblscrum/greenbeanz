@@ -7,7 +7,7 @@ const queryDatabase = (query, params, callback) => {
   try {
     client.query(query, params, (err, res) => {
       if (err) {
-        throw err;
+        callback(err, null);
       }
       callback(null, res);
     });
@@ -16,23 +16,53 @@ const queryDatabase = (query, params, callback) => {
   }
 };
 
-const selectAll = (callback) => {
+const promiseQueryDatabase = (query, params) => {
+  return new Promise((resolve, reject) => {
+    client.query(query, params, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+};
+
+const selectAll = () => {
   const query = 'SELECT * FROM items';
   const params = [];
-  queryDatabase(query, params, callback);
+  return promiseQueryDatabase(query, params);
 };
 
-
-const addUser = (username, password, callback) => {
-  const query = 'INSERT INTO users (name, password) VALUES ($1, $2);';
-  const params = [username, password];
-  queryDatabase(query, params, callback);
-};
-
-const findUser = (username, callback) => {
+const findUser = (username) => {
   const query = 'SELECT EXISTS (SELECT 1 FROM users WHERE name=$1);';
   const params = [username];
-  queryDatabase(query, params, callback);
+  return promiseQueryDatabase(query, params);
+};
+
+const addUser = (userObj) => {
+  let { username, password } = userObj;
+  const query = 'INSERT INTO users (name, password) VALUES ($1, $2);';
+  const params = [username, password];
+  return findUser(username)
+    .then(data => {
+      if (!data.rows[0].exists) {
+        return promiseQueryDatabase(query, params)
+          .then(data => {
+            return "Successfully signed up!";
+          })
+          .catch(err => {
+            console.log(err);
+            return err;
+          })
+      } else {
+        return "Sorry, this username is already taken. Please try again.";
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
 };
 
 const checkPassword = (username, callback) => {
@@ -50,7 +80,7 @@ const insertOne = (itemObj, callback) => {
 const deleteItem = (options, callback) => {
   const query = 'DELETE FROM items WHERE id = $1;';
   const params = [options.id];
-  queryDatabase(query, params, callback);  
+  queryDatabase(query, params, callback);
 };
 
 const insertList = (options, callback) => {
@@ -65,13 +95,17 @@ const insertListItems = (options, callback) => {
   queryDatabase(query, params, callback);
 };
 
+const findUserById = (id, callback) => {
+  const query = 'SELECT * FROM users WHERE id=$1;';
+  const params = [id];
+  queryDatabase(query, params, callback);
+};
 
-module.exports.selectAll = selectAll;
-module.exports.insertOne = insertOne;
-module.exports.findUser = findUser;
-module.exports.addUser = addUser;
-module.exports.checkPassword = checkPassword;
-module.exports.deleteItem = deleteItem;
-module.exports.insertList = insertList;
-module.exports.insertListItems = insertListItems;
+const findUserByUsername = (username) => {
+  const query = 'SELECT * FROM users WHERE name=$1;';
+  const params = [username];
+  return promiseQueryDatabase(query, params);
+}
+
+module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername };
 

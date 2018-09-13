@@ -1,11 +1,12 @@
 var path = require('path');
 var SRC_DIR = path.join(__dirname, '/react-client/src');
 var DIST_DIR = path.join(__dirname, '/react-client/dist');
+var LOGIN_DIR = path.join(__dirname, '/react-client/login');
 
 module.exports = {
   entry: {
-    app: `${SRC_DIR}/index.jsx`,
-    login: `${SRC_DIR}/login.jsx`
+    'app/app': `${SRC_DIR}/index.jsx`,
+    'login/login': `${SRC_DIR}/login.jsx`
   },
   output: {
     filename: '[name].js',
