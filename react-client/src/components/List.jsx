@@ -9,7 +9,7 @@ const List = (props) => (
     {Object.keys(props.items).map((store, idx) => {
       return (
         <div className={store} key={idx} >
-          {props.items[store].length > 0 ? (<h3 className="stores">{store}</h3>) : ('')}
+          {props.items[store].length > 0 ? (<h1 className="stores">{props.titles[idx]}</h1>) : ('')}
           {props.items[store].slice(0, props.showItems).map((item, i) => {
             return <ListItem key={i} item={item} addItem={props.addItem} />;
           })}

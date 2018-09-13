@@ -2,6 +2,7 @@ import React from 'react';
 
 const ListItem = (props) => (
   <div className="indivRes" >
+  
     <div><img src={props.item.image} /></div>
     <a>{props.item.name}</a>
     <div>PRICE: ${props.item.price}</div>
