@@ -6,16 +6,18 @@ const List = (props) => (
     <h4> List Component </h4>
     {/* <h5>There are {props.items.length} items. </h5> */}
     <br />
-    {/* {console.log(props.items.walmart)} */}
-    {/* <div className="hebResults"> */}
-    {props.items.heb.map((item, i) => {
-      // console.log(item);
-      return <ListItem key={i} item={item} addItem={props.addItem}/>;
+    {Object.keys(props.items).map((store, idx) => {
+      return (
+        <div className={store} key={idx} >
+          {props.items[store].slice(0, props.showItems).map((item, i) => {
+            return <ListItem key={i} item={item} addItem={props.addItem} />;
+          })}
+
+          {props.items[store].length > 0 ? <em className="showMore" onClick={props.showMore} >Show More +</em> : ('') }
+        </div>
+      );
     })
     }
-    {/* </div> */}
-  
-
   </div>
 );
 

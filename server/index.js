@@ -164,14 +164,14 @@ app.post("/api/items", function(req, res) {
   //     // console.log('inside ',allResults);
   //   }
   // });
-
+  
 
   heb
   .scrape(req.body.query)
   .then(results => {
     // res.json(results);
     allResults.heb = results;
-    console.log('inside ',allResults);
+    // console.log('inside ',allResults);
     res.send(allResults);
   })
   .catch(err => {
@@ -180,11 +180,12 @@ app.post("/api/items", function(req, res) {
   });
 
   // wholeFoods
-  //   .scrape(req.body.item)
+  //   .scrape(req.body.query)
   //   .then(results => {
   //     // res.json(results);
+  //     console.log('inside ',results);
   //     allResults.wholeFoods = results;
-  //     console.log('inside ',allResults);
+  //     res.send(allResults);
   //   })
   //   .catch(err => {
   //     console.log(err);
