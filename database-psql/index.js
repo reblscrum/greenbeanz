@@ -50,14 +50,14 @@ const addUser = (userObj) => {
       if (!data.rows[0].exists) {
         return promiseQueryDatabase(query, params)
           .then(data => {
-            return "Successfully signed up!";
+            return 'Successfully signed up. Please log in!';
           })
           .catch(err => {
             console.log(err);
             return err;
-          })
+          });
       } else {
-        return "Sorry, this username is already taken. Please try again.";
+        return 'Sorry, this username is already taken. Please try again.';
       }
     })
     .catch(err => {
@@ -106,7 +106,19 @@ const findUserByUsername = (username) => {
   const query = 'SELECT * FROM users WHERE name=$1;';
   const params = [username];
   return promiseQueryDatabase(query, params);
-}
+};
 
-module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername };
+const fetchUsersLists = (options, callback) => {
+  const query = 'SELECT * FROM lists WHERE lists.user_id = $1;';
+  const params = [options.userId];
+  queryDatabase(query, params, callback);
+};
+
+const fetchListItems = (options, callback) => {
+  const query = 'SELECT * FROM items INNER JOIN lists on lists.user_id = items.user_id AND lists.user_id = $1 AND lists.id = $2;';
+  const params = [options.userId, options.listId];
+  queryDatabase(query, params, callback);
+};
+
+module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername, fetchUsersLists, fetchListItems };
 

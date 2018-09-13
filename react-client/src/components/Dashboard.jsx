@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 // import ShoppingList from 'ShoppingList.jsx';
 // import List from './List';
 import Cart from '../components/Cart.jsx';
@@ -10,7 +11,13 @@ class Dashboard extends React.Component {
     this.state = {
       currentScreen: 'dashboard',
       showItems: 3,
+      usersLists: []
     };
+    this.getLists = this.getLists.bind(this);
+  }
+
+  componentDidMount() {
+    this.getLists();
   }
 
   changeScreen() {
@@ -29,6 +36,14 @@ class Dashboard extends React.Component {
   reset() {
     this.setState({showItems: 3});
   }
+  
+  getLists() {
+    // console.log('Firing getLists');
+    $.get('/db/users/lists', (data) => {
+      console.log('Got some data back from getLists', data);
+      this.setState({ usersLists: data.rows });
+    });
+  }
 
   render() {
     // console.log(this.props);
@@ -45,11 +60,11 @@ class Dashboard extends React.Component {
                 <em className="options" onClick={this.changeScreen.bind(this)}>Create A New List</em>
               </h3>
               {/* <em className="options" onClick={this.changeScreen.bind(this)}>Set Budget</em> */}
-              {this.props.existingLists.map((list, i) => {
+              {this.state.usersLists.map((list, i) => {
                 return (
                   <div key={i} className="savedList">
                     <div style={{fontWeight: 'bold'}} > <em> {list.name} </em> </div>
-                    <a style={{ color: '#3fae42' }}> {list.items.length} </a> items.
+                    <a style={{ color: '#3fae42' }}> {list.budget} </a> budget.
                     {/* <input type="button" value="Edit List" /> */}
                   </div>
                 );
