@@ -17,7 +17,7 @@ const Cart = (props) => {
       <div id="main">
         <h1>The Green Bean <img src="logo.png" alt="logo" className="logo" /> </h1>
         <div className="formArea">
-          <input type="text" value={props.item} onChange={props.handleInput} />
+          <input type="text" value={props.query} onChange={props.handleInput} />
           <input type="button" value="Search"onClick={props.search} />
         </div>
         <List items={props.items} addItem={props.addItem}/>
