@@ -12,7 +12,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // data: {
       items: [],
       item: '',
       query: '',
@@ -27,7 +26,6 @@ class App extends React.Component {
         { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
         { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
       ],
-      // }
     };
   }
 

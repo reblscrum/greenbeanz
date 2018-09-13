@@ -114,6 +114,7 @@ app.post("/db/users", (req, res) => {
   //else, return error
 });
 
+
 // ROUTES
 app.get("/items", function(req, res) {
   db.selectAll(function(err, data) {
@@ -125,29 +126,14 @@ app.get("/items", function(req, res) {
   });
 });
 
-app.post("/api/items", function(req, res) {
-  console.log(req.body.item);
-  api.walmart(req.body.item, (err, result) => {
-    if (err) {
-      console.log("error getting back to the server", err);
-    } else {
-      respon = JSON.parse(result.body);
-      response = reshapeItems(respon.items);
-
-      // console.log('I got that response here', response);
-      res.send(response);
-    }
-  });
-  // res.send(`api off right now, can't make a call to walmart for ${req.body.item}`)
-});
 //was /db/items
 app.post("/db/lists", function(req, res) {
   // let cart = req.body.item;
   // cart.forEach(obj => {
-  //   console.log('obj again', obj);
+    //   console.log('obj again', obj);
   //   db.insertOne(obj, (err, savedItems) => {
   //     if (err) {
-  //       console.log(err);
+    //       console.log(err);
   //     }
   //     console.log('savedItems is', savedItems);
   //   });
@@ -179,6 +165,67 @@ app.post("/db/lists", function(req, res) {
           }
         });
       });
+    }
+  });
+});
+
+app.post("/api/items", function(req, res) {
+  // console.log(req.body.item);
+  let allResults = {
+    walmart: [],
+    wholeFoods: [],
+    heb: []
+  };
+  // api.walmart(req.body.item, (err, result) => {
+  //   if (err) {
+  //     console.log("error getting back to the server", err);
+  //   } else {
+  //     respon = JSON.parse(result.body);
+  //     response = reshapeItems(respon.items);
+  //     // res.send(response);
+  //     allResults.walmart = response;
+      // console.log('inside ',allResults);
+
+  //   }
+  // });
+
+  heb
+  .scrape(req.body.query)
+  .then(results => {
+    // res.json(results);
+    allResults.heb = results;
+    console.log('inside ',allResults);
+
+  })
+  .catch(err => {
+    console.log(err);
+    res.sendStatus(500);
+  });
+
+  wholeFoods
+    .scrape(req.body.item)
+    .then(results => {
+      // res.json(results);
+      allResults.wholeFoods = results;
+      console.log('inside ',allResults);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+  });
+  console.log('outside', allResults);
+});
+
+app.post("/api/walmart", function(req, res) {
+  // console.log(req.body.item);
+
+  api.walmart(req.body.item, (err, result) => {
+    if (err) {
+      console.log("error getting back to the server", err);
+    } else {
+      respon = JSON.parse(result.body);
+      response = reshapeItems(respon.items);
+      res.send(response);
     }
   });
 });
