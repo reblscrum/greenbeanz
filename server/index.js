@@ -58,23 +58,22 @@ app.post("/users/signup", (req, res) => {
     });
 });
 
-app.post("/users/login", passport.authenticate('local', { failureRedirect: 'incorrectLogin' }), (req, res) => {
-  res.send('/');
+app.post("/users/login", passport.authenticate('local'), (req, res) => {
+  res.send('/app');
 });
+
 
 app.get('/users/logout',
   function (req, res) {
     req.logout();
-    res.send('/login');
+    res.send('/');
   });
 
 
 // ROUTES
-app.get('/', checkUser, (req, res) => {
-  res.redirect('/app');
-});
+app.use('/', express.static(__dirname + "/../react-client/dist/landing"));
 
-app.get('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
+app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
 
 app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
