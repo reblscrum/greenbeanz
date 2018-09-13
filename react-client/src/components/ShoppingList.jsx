@@ -54,7 +54,6 @@ class ShoppingList extends React.Component {
     //Saves list to DB pass in userId, currently set to 1
     const options = {
       listName: this.state.listName,
-      userId: 1,
       budget: 500,
       shopList: this.props.shopList
     };

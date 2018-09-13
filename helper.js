@@ -5,7 +5,7 @@ let walmart = (query, callback) => {
     'apiKey': process.env.TOKEN,
     'query': query,
     'numItems': 10
-  }
+  };
 
   request({ 'url': 'http://api.walmartlabs.com/v1/search?', qs: options }, function (err, res, body) {
     if (err) {
@@ -14,6 +14,6 @@ let walmart = (query, callback) => {
       callback(null, res);
     }
   });
-}
+};
 
 module.exports.walmart = walmart;
