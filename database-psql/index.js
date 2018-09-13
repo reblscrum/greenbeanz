@@ -66,8 +66,10 @@ const insertListItems = (options, callback) => {
 };
 
 const fetchUsersLists = (options, callback) => {
-  // const query = 'SELECT lists'
-}
+  const query = 'SELECT * from items INNER JOIN lists ON lists.user_id = items.user_id AND lists.user_id = $1;';
+  const params = [options.userId];
+  queryDatabase(query, params, callback);
+};
 
 
 module.exports.selectAll = selectAll;
@@ -78,4 +80,5 @@ module.exports.checkPassword = checkPassword;
 module.exports.deleteItem = deleteItem;
 module.exports.insertList = insertList;
 module.exports.insertListItems = insertListItems;
+module.exports.fetchUsersLists = fetchUsersLists;
 

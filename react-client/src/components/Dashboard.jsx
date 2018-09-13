@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 // import ShoppingList from 'ShoppingList.jsx';
 // import List from './List';
 import Cart from '../components/Cart.jsx';
@@ -13,11 +14,19 @@ class Dashboard extends React.Component {
     this.getLists = this.getLists.bind(this);
   }
 
+  componentDidMount() {
+    this.getLists();
+  }
+
   changeScreen() {
     this.state.currentScreen === 'dashboard' ? this.setState({ currentScreen: 'cart' }) : this.setState({ currentScreen: 'dashboard' });
   }
 
   getLists() {
+    console.log('Firing getLists');
+    const options = {
+      userId: 1
+    };
     $.get('/db/users/lists', (data) => {
       console.log('Got some data back from getLists', data);
     });
