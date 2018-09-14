@@ -84,7 +84,7 @@ app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app
 
 app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
-app.use('/', (req, res, next) => {
+app.use('/home', (req, res, next) => {
   if (req.user) {
     res.redirect('/app');
   } else {
@@ -289,7 +289,6 @@ app.post('/db/items', checkUser, (req, res) => {
 });
 
 app.get('/db/users/lists', checkUser, (req, res) => {
-  console.log('sessions obj', req.session);
   const options = {
     userId: req.session.passport.user
   };
@@ -298,7 +297,6 @@ app.get('/db/users/lists', checkUser, (req, res) => {
     if (err) {
       console.log('Logging error inside fetch from server');
     } else {
-      console.log('Logging success inside fetch from server');
       res.send(results);
       // //console.log('what are response in else statement', response);
     }
