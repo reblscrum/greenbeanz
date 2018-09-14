@@ -79,17 +79,13 @@ app.get('/users/logout',
 
 
 // ROUTES
-<<<<<<< HEAD
-app.use('/', express.static(__dirname + '/../react-client/dist/landing'));
-=======
 app.get('/', (req, res)=>{
-  if(req.user){
+  if (req.user) {
     res.redirect('/app');
   } else {
     res.redirect('/landing');
   }
 });
->>>>>>> 88c483d757d9ca7470eb80959711d400c25f2aef
 
 app.use('/app', checkUser, express.static(__dirname + '/../react-client/dist/app'));
 

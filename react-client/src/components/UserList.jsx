@@ -32,6 +32,7 @@ class UserList extends Component {
 
   getTotal() {
     const total = this.state.items.reduce((total, item) => {
+      console.log('item price', item.price);
       const number = Number(item.price);
       total += number;
       return total;
