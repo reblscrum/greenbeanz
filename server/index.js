@@ -197,26 +197,28 @@ app.get('/db/users/lists', checkUser, (req, res) => {
   db.fetchUsersLists(options, (err, results) => {
     // let responseBody = []; 
     if (err) {
-      console.log('Logging error inside fetch from server', err);
+      console.log('Logging error inside fetch from server');
     } else {
-      console.log('Logging success inside fetch from server', results);
-      // results.rows.map(list => {
-      //   let response = [];
-      //   const options = {
-      //     listId: list.id,
-      //     userId: list.user_id
-      //   };
-      //   db.fetchListItems(options, (err, results) => {
-      //     // console.log('-------Here are results from fetching listItems-------', results);
-      //     response = response.push(results.rows);
-      //     // console.log('response inside fetchlistItems', response);
-      //   });
-      //   console.log('what is response inside forEach', response);
-      // });
+      console.log('Logging success inside fetch from server');
       res.send(results);
       // //console.log('what are response in else statement', response);
     }
     //console.log('response please', response);
+  });
+});
+
+app.post('/db/users/listItems', (req, res) => {
+  const options = {
+    userId: req.session.passport.user,
+    listId: req.body.listId
+  };
+
+  db.fetchListItems(options, (err, results) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.send(results.rows);
+    }
   });
 });
 
