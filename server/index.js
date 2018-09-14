@@ -1,7 +1,7 @@
 require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
-var api = require('../helper.js');
+var {walmart} = require('../helpers/walmart');
 var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -66,7 +66,7 @@ app.post('/users/signup', (req, res) => {
     });
 });
 
-app.post("/users/login", passport.authenticate('local'), (req, res) => {
+app.post('/users/login', passport.authenticate('local'), (req, res) => {
   res.send('/app');
 });
 
@@ -79,11 +79,19 @@ app.get('/users/logout',
 
 
 // ROUTES
-app.use('/', express.static(__dirname + "/../react-client/dist/landing"));
+app.get('/', (req, res)=>{
+  if (req.user) {
+    res.redirect('/app');
+  } else {
+    res.redirect('/landing');
+  }
+});
 
-app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
+app.use('/app', checkUser, express.static(__dirname + '/../react-client/dist/app'));
 
-app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
+app.use('/login', express.static(__dirname + '/../react-client/dist/login'));
+
+app.use('/landing', express.static(__dirname + "/../react-client/dist/landing"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
@@ -96,11 +104,11 @@ app.get('/items', checkUser, function (req, res) {
     });
 });
 
-// app.post("/api/items", checkUser, function (req, res) {
+// app.post('/api/items', checkUser, function (req, res) {
 //   console.log(req.body.item);
 //   api.walmart(req.body.item, (err, result) => {
 //     if (err) {
-//       console.log("error getting back to the server", err);
+//       console.log('error getting back to the server', err);
 //     } else {
 //       respon = JSON.parse(result.body);
 //       response = reshapeItems(respon.items);
@@ -130,10 +138,10 @@ app.post('/db/lists', function (req, res) {
 
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
-            console.log('Error from server inserting into List_Items', err);
+            console.log('Error from server inserting into List_Items');
             // res.sendStatus(404);
           } else {
-            console.log('Success inserting into List_Items', data);
+            console.log('Success inserting into List_Items');
             // res.sendStatus(201);
           }
         });
@@ -158,7 +166,7 @@ app.post('/db/lists', function (req, res) {
 //     }).then(() => {
 //     api.walmart(req.body.query, (err, result) => {
 //       if (err) {
-//         console.log("error getting back to the server", err);
+//         console.log('error getting back to the server', err);
 //       } else {
 //         respon = JSON.parse(result.body);
 //         response = reshapeItems(respon.items);
@@ -172,14 +180,11 @@ app.post('/db/lists', function (req, res) {
 // });
 
 app.post('/api/walmart', function (req, res) {
-  // console.log(req.body.item);
-
-  api.walmart(req.body.query, (err, result) => {
+  walmart(req.body.query, (err, result) => {
     if (err) {
-      console.log("error getting back to the server", err);
+      console.log('error getting back to the server', err);
     } else {
       respon = JSON.parse(result.body);
-      console.log(respon);
       response = reshapeItems(respon.items);
       res.send(response);
     }
@@ -233,7 +238,6 @@ app.post('/db/remove/items', checkUser, (req, res) => {
 app.post('/db/items', checkUser, (req, res) => {
   const body = req.body;
   body.user_id = req.session.passport.user;
-  console.log('req.body', req.body);
   db.insertOne(body, (err, savedData) => {
     if (err) {
       console.log('Error insertOne at /db/items', err);
@@ -246,33 +250,33 @@ app.post('/db/items', checkUser, (req, res) => {
 });
 
 app.get('/db/users/lists', checkUser, (req, res) => {
-  console.log('sessions obj', req.session);
   const options = {
     userId: req.session.passport.user
   };
   db.fetchUsersLists(options, (err, results) => {
     // let responseBody = []; 
     if (err) {
-      console.log('Logging error inside fetch from server', err);
+      console.log('Logging error inside fetch from server');
     } else {
-      console.log('Logging success inside fetch from server', results);
-      // results.rows.map(list => {
-      //   let response = [];
-      //   const options = {
-      //     listId: list.id,
-      //     userId: list.user_id
-      //   };
-      //   db.fetchListItems(options, (err, results) => {
-      //     // console.log('-------Here are results from fetching listItems-------', results);
-      //     response = response.push(results.rows);
-      //     // console.log('response inside fetchlistItems', response);
-      //   });
-      //   console.log('what is response inside forEach', response);
-      // });
       res.send(results);
       // //console.log('what are response in else statement', response);
     }
     //console.log('response please', response);
+  });
+});
+
+app.post('/db/users/listItems', (req, res) => {
+  const options = {
+    userId: req.session.passport.user,
+    listId: req.body.listId
+  };
+
+  db.fetchListItems(options, (err, results) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.send(results.rows);
+    }
   });
 });
 
