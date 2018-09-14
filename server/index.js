@@ -79,11 +79,18 @@ app.get('/users/logout',
 
 
 // ROUTES
-app.use('/', express.static(__dirname + "/../react-client/dist/landing"));
 
 app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
 
 app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
+
+app.use('/', (req, res, next) => {
+  if (req.user) {
+    res.redirect('/app');
+  } else {
+    next();
+  }
+}, express.static(__dirname + "/../react-client/dist/landing"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
@@ -156,21 +163,21 @@ app.post('/api/items', function (req, res) {
       // res.json(results);
       allResults.heb = results;
     }).then(() => {
-    api.walmart(req.body.query, (err, result) => {
-      if (err) {
-        console.log("error getting back to the server", err);
-      } else {
-        respon = JSON.parse(result.body);
-        response = reshapeItems(respon.items);
-        // res.send(response);
-        allResults.walmart = response;
-        res.send(allResults);
-      }
-    })
-  });
+      api.walmart(req.body.query, (err, result) => {
+        if (err) {
+          console.log("error getting back to the server", err);
+        } else {
+          respon = JSON.parse(result.body);
+          response = reshapeItems(respon.items);
+          // res.send(response);
+          allResults.walmart = response;
+          res.send(allResults);
+        }
+      })
+    });
 
   // WHEN CHAINING WHOLE FOODS, THE CALLSTACK EXCEEDS. 
-  
+
 
   // wholeFoods
   //   .scrape(req.body.query)
@@ -203,7 +210,7 @@ app.post('/api/items', function (req, res) {
   //   .catch(err => {
   //     console.log(err);
   //     res.sendStatus(500);
-    
+
 
 });
 
