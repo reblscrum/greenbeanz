@@ -1,7 +1,7 @@
 require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
-var api = require('../helper.js');
+var {walmart} = require('../helpers/walmart');
 var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -79,18 +79,19 @@ app.get('/users/logout',
 
 
 // ROUTES
+app.get('/', (req, res)=>{
+  if(req.user){
+    res.redirect('/app');
+  } else {
+    res.redirect('/landing');
+  }
+});
 
 app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
 
 app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
-app.use('/home', (req, res, next) => {
-  if (req.user) {
-    res.redirect('/app');
-  } else {
-    next();
-  }
-}, express.static(__dirname + "/../react-client/dist/landing"));
+app.use('/landing', express.static(__dirname + "/../react-client/dist/landing"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
@@ -179,9 +180,7 @@ app.post('/db/lists', function (req, res) {
 // });
 
 app.post('/api/walmart', function (req, res) {
-  // console.log(req.body.item);
-
-  api.walmart(req.body.query, (err, result) => {
+  walmart(req.body.query, (err, result) => {
     if (err) {
       console.log("error getting back to the server", err);
     } else {
