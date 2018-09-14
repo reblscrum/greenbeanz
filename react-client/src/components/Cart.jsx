@@ -23,18 +23,18 @@ const Cart = (props) => {
           <div className="resLine">_________________________________________________</div>
           <div>
             {props.walmart.length > 0 ? (<h1 className="stores">Walmart</h1>) : ('')}
-            <List className="walmart" items={props.walmart} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
+            <List className="walmart" store={'Walmart'} query={props.finalQuery} items={props.walmart} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
             {props.walmart.length > 0 ? <div id="show"> <em className="showMore" onClick={props.showMore} >Show More + </em> || <em className="showLess" onClick={props.showLess} > Show Less -</em>
               <div className="resLine">_________________________________________________</div> </div> : ('') }
           </div>
           <div>
             {props.heb.length > 0 ? (<h1 className="stores">HEB</h1>) : ('')}
-            <List className="heb" items={props.heb} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
+            <List className="heb" store={'HEB'} query={props.finalQuery} items={props.heb} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
             {props.heb.length > 0 ? <div id="show"> <em className="showMore" onClick={props.showMore} >Show More + </em> || <em className="showLess" onClick={props.showLess} > Show Less -</em>
               <div className="resLine">_________________________________________________</div></div> : ('') }</div>
           <div>
             {props.wholeFoods.length > 0 ? (<h1 className="stores">Whole Foods</h1>) : ('')}
-            <List className="wholeFoods" items={props.wholeFoods} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
+            <List className="wholeFoods" store={'Whole Foods'} query={props.finalQuery} items={props.wholeFoods} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
             {props.wholeFoods.length > 0 ? <div id="show"> <em className="showMore" onClick={props.showMore} >Show More + </em> || <em className="showLess" onClick={props.showLess} > Show Less -</em>
               <div className="resLine">_________________________________________________</div></div> : ('') }</div>
         </div>
