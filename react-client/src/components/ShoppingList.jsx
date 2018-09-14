@@ -30,7 +30,7 @@ class ShoppingList extends React.Component {
     let oppState = (!this.state.editMode);
     this.setState({ editMode: oppState });
   }
-  remove(e) { 
+  remove(e) {
     const id = e.target.id;
     console.log('removing', e.target.id);
     const options = {
@@ -45,8 +45,8 @@ class ShoppingList extends React.Component {
   }
 
   handleChange(e) {
-    console.log('Handling Change', e.target.value);
-    this.setState({ listName: e.target.value});
+    // console.log('Handling Change', e.target.value);
+    this.setState({ listName: e.target.value });
   }
 
   addList() {
@@ -66,19 +66,18 @@ class ShoppingList extends React.Component {
     // console.log(this.props)
     return (
       <div className={this.state.listName}>
-        <label>
-          Name your list
-          <input type="text" value={this.state.listName} onChange={this.handleChange}/>
-        </label>
+        {/* changes the name of the List as you enter */}
+        <h2>{this.state.listName.length === 0 ? 'My List' : this.state.listName}</h2>
+        {/* allows you to change the list name after pressing edit */}
+        {this.state.editMode ? ( <label> <a className="label">Name your list: </a> <input type="text" value={this.state.listName} onChange={this.handleChange} /></label> ) : ('')}
+
         {this.props.shopList.map((stuff, i) => {
           return (
             <div className="indivItem" key={i}>
               {this.state.editMode ?
-                (<input type="button" value="Remove From List" id={i} onClick={this.remove.bind(this)} />)
-                : ('')
-              }
-              <a> {stuff.name}   <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
-              </a>
+                (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
+              <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
+              
               <div className="id">{stuff.itemId}</div>
               <br />
             </div>
@@ -92,7 +91,7 @@ class ShoppingList extends React.Component {
         </div>
 
         {this.props.shopList.length > 0 ? (
-          <div>
+          <div className="shoppingBtns" >
             <input type="button" value="Edit List" onClick={this.editList.bind(this)} />
             <input type="button" value="Save List" onClick={this.addList} />
           </div>

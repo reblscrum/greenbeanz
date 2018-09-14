@@ -8,8 +8,7 @@ const Cart = (props) => {
       <div className="container">
         <div id="mySidenav" className="sidenav">
           <div className="content">
-            <em className="back" onClick={props.changeScreen} >Back To Dash ></em>
-            <h2> My List</h2>
+            <em className="back" onClick={props.changeScreen} >  Back To Dash > </em>
             <ShoppingList shopList={props.shoppingList} saveList={props.saveList} />
           </div>
         </div>
@@ -21,6 +20,7 @@ const Cart = (props) => {
           <input type="button" value="Search" onClick={props.search} />
         </div>
         <div className="results">
+          <div className="resLine">_________________________________________________</div>
           <div>
             {props.walmart.length > 0 ? (<h1 className="stores">Walmart</h1>) : ('')}
             <List className="walmart" items={props.walmart} addItem={props.addItem} showItems={props.showItems} showMore={props.showMore} showLess={props.showLess} />
