@@ -41,7 +41,6 @@ class Dashboard extends React.Component {
   getLists() {
     // console.log('Firing getLists');
     $.get('/db/users/lists', (data) => {
-      console.log('Got some data back from getLists', data);
       this.setState({ usersLists: data.rows });
     });
   }
@@ -61,11 +60,7 @@ class Dashboard extends React.Component {
                 <em className="options" onClick={this.changeScreen.bind(this)}>Create A New List</em>
               </h3>
               {/* <em className="options" onClick={this.changeScreen.bind(this)}>Set Budget</em> */}
-              {this.state.usersLists.map((list, i) => {
-                return (
-                  <UserList key={i} list={list} />
-                );
-              })
+              {this.state.usersLists.map((list, i ) => <UserList key={i} list={list}/>)
               }
             </div>
           </div>

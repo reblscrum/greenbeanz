@@ -6,7 +6,7 @@ const getHebData = (searchTerm, cb) => {
   $.ajax({
     method: 'POST',
     url: '/api/heb',
-    data: { query: 'milk' }
+    data: { query: searchTerm }
   })
     .then(results => {
       console.log(results);
