@@ -142,70 +142,34 @@ app.post('/db/lists', function (req, res) {
   });
 });
 
-app.post('/api/items', function (req, res) {
-  // console.log(req.body.item);
-  let allResults = {
-    walmart: [],
-    wholeFoods: [],
-    heb: []
-  };
+// app.post('/api/items', function (req, res) {
+//   // console.log(req.body.item);
+//   let allResults = {
+//     walmart: [],
+//     wholeFoods: [],
+//     heb: []
+//   };
 
-  heb
-    .scrape(req.body.query)
-    .then(results => {
-      // res.json(results);
-      allResults.heb = results;
-    }).then(() => {
-    api.walmart(req.body.query, (err, result) => {
-      if (err) {
-        console.log("error getting back to the server", err);
-      } else {
-        respon = JSON.parse(result.body);
-        response = reshapeItems(respon.items);
-        // res.send(response);
-        allResults.walmart = response;
-        res.send(allResults);
-      }
-    })
-  });
+//   heb
+//     .scrape(req.body.query)
+//     .then(results => {
+//       // res.json(results);
+//       allResults.heb = results;
+//     }).then(() => {
+//     api.walmart(req.body.query, (err, result) => {
+//       if (err) {
+//         console.log("error getting back to the server", err);
+//       } else {
+//         respon = JSON.parse(result.body);
+//         response = reshapeItems(respon.items);
+//         // res.send(response);
+//         allResults.walmart = response;
+//         res.send(allResults);
+//       }
+//     })
+//   });
 
-  // WHEN CHAINING WHOLE FOODS, THE CALLSTACK EXCEEDS. 
-  
-
-  // wholeFoods
-  //   .scrape(req.body.query)
-  //   .then(results => {
-  //     // res.json(results);
-  //     console.log('inside ', results);
-  //     allResults.wholeFoods = results;
-  //     // res.send(allResults);
-  //   })
-  //   .then(() => {
-  //     heb
-  //       .scrape(req.body.query)
-  //       .then(results => {
-  //         // res.json(results);
-  //         allResults.heb = results;
-  //       })
-  //   }).then(() => {
-  //     api.walmart(req.body.query, (err, result) => {
-  //       if (err) {
-  //         console.log("error getting back to the server", err);
-  //       } else {
-  //         respon = JSON.parse(result.body);
-  //         response = reshapeItems(respon.items);
-  //         // res.send(response);
-  //         allResults.walmart = response;
-  //         res.send(allResults);
-  //       }
-  //     });
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     res.sendStatus(500);
-    
-
-});
+// });
 
 app.post('/api/walmart', function (req, res) {
   // console.log(req.body.item);
