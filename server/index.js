@@ -1,7 +1,7 @@
 require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
-var api = require('../helper.js');
+var {walmart} = require('../helpers/walmart');
 var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -79,18 +79,19 @@ app.get('/users/logout',
 
 
 // ROUTES
+app.get('/', (req, res)=>{
+  if(req.user){
+    res.redirect('/app');
+  } else {
+    res.redirect('/landing');
+  }
+});
 
 app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
 
 app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
 
-app.use('/', (req, res, next) => {
-  if (req.user) {
-    res.redirect('/app');
-  } else {
-    next();
-  }
-}, express.static(__dirname + "/../react-client/dist/landing"));
+app.use('/landing', express.static(__dirname + "/../react-client/dist/landing"));
 
 app.get('/items', checkUser, function (req, res) {
   db.selectAll()
@@ -149,80 +150,41 @@ app.post('/db/lists', function (req, res) {
   });
 });
 
-app.post('/api/items', function (req, res) {
-  // console.log(req.body.item);
-  let allResults = {
-    walmart: [],
-    wholeFoods: [],
-    heb: []
-  };
+// app.post('/api/items', function (req, res) {
+//   // console.log(req.body.item);
+//   let allResults = {
+//     walmart: [],
+//     wholeFoods: [],
+//     heb: []
+//   };
 
-  heb
-    .scrape(req.body.query)
-    .then(results => {
-      // res.json(results);
-      allResults.heb = results;
-    }).then(() => {
-      api.walmart(req.body.query, (err, result) => {
-        if (err) {
-          console.log("error getting back to the server", err);
-        } else {
-          respon = JSON.parse(result.body);
-          response = reshapeItems(respon.items);
-          // res.send(response);
-          allResults.walmart = response;
-          res.send(allResults);
-        }
-      })
-    });
+//   heb
+//     .scrape(req.body.query)
+//     .then(results => {
+//       // res.json(results);
+//       allResults.heb = results;
+//     }).then(() => {
+//     api.walmart(req.body.query, (err, result) => {
+//       if (err) {
+//         console.log("error getting back to the server", err);
+//       } else {
+//         respon = JSON.parse(result.body);
+//         response = reshapeItems(respon.items);
+//         // res.send(response);
+//         allResults.walmart = response;
+//         res.send(allResults);
+//       }
+//     })
+//   });
 
-  // WHEN CHAINING WHOLE FOODS, THE CALLSTACK EXCEEDS. 
-
-
-  // wholeFoods
-  //   .scrape(req.body.query)
-  //   .then(results => {
-  //     // res.json(results);
-  //     console.log('inside ', results);
-  //     allResults.wholeFoods = results;
-  //     // res.send(allResults);
-  //   })
-  //   .then(() => {
-  //     heb
-  //       .scrape(req.body.query)
-  //       .then(results => {
-  //         // res.json(results);
-  //         allResults.heb = results;
-  //       })
-  //   }).then(() => {
-  //     api.walmart(req.body.query, (err, result) => {
-  //       if (err) {
-  //         console.log("error getting back to the server", err);
-  //       } else {
-  //         respon = JSON.parse(result.body);
-  //         response = reshapeItems(respon.items);
-  //         // res.send(response);
-  //         allResults.walmart = response;
-  //         res.send(allResults);
-  //       }
-  //     });
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     res.sendStatus(500);
-
-
-});
+// });
 
 app.post('/api/walmart', function (req, res) {
-  // console.log(req.body.item);
-
-  api.walmart(req.body.query, (err, result) => {
+  walmart(req.body.query, (err, result) => {
     if (err) {
       console.log("error getting back to the server", err);
     } else {
       respon = JSON.parse(result.body);
-      console.log(respon);
       response = reshapeItems(respon.items);
       res.send(response);
     }
@@ -276,7 +238,6 @@ app.post('/db/remove/items', checkUser, (req, res) => {
 app.post('/db/items', checkUser, (req, res) => {
   const body = req.body;
   body.user_id = req.session.passport.user;
-  console.log('req.body', req.body);
   db.insertOne(body, (err, savedData) => {
     if (err) {
       console.log('Error insertOne at /db/items', err);
@@ -289,7 +250,6 @@ app.post('/db/items', checkUser, (req, res) => {
 });
 
 app.get('/db/users/lists', checkUser, (req, res) => {
-  console.log('sessions obj', req.session);
   const options = {
     userId: req.session.passport.user
   };
@@ -298,7 +258,6 @@ app.get('/db/users/lists', checkUser, (req, res) => {
     if (err) {
       console.log('Logging error inside fetch from server');
     } else {
-      console.log('Logging success inside fetch from server');
       res.send(results);
       // //console.log('what are response in else statement', response);
     }
