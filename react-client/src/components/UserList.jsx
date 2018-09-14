@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import UserListItem from './UserListItem.jsx';
+
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -31,6 +32,7 @@ class UserList extends Component {
 
   getTotal() {
     const total = this.state.items.reduce((total, item) => {
+      console.log('item price', item.price);
       const number = Number(item.price);
       total += number;
       return total;

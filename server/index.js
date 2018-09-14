@@ -66,7 +66,7 @@ app.post('/users/signup', (req, res) => {
     });
 });
 
-app.post("/users/login", passport.authenticate('local'), (req, res) => {
+app.post('/users/login', passport.authenticate('local'), (req, res) => {
   res.send('/app');
 });
 
@@ -80,16 +80,16 @@ app.get('/users/logout',
 
 // ROUTES
 app.get('/', (req, res)=>{
-  if(req.user){
+  if (req.user) {
     res.redirect('/app');
   } else {
     res.redirect('/landing');
   }
 });
 
-app.use('/app', checkUser, express.static(__dirname + "/../react-client/dist/app"));
+app.use('/app', checkUser, express.static(__dirname + '/../react-client/dist/app'));
 
-app.use('/login', express.static(__dirname + "/../react-client/dist/login"));
+app.use('/login', express.static(__dirname + '/../react-client/dist/login'));
 
 app.use('/landing', express.static(__dirname + "/../react-client/dist/landing"));
 
@@ -104,11 +104,11 @@ app.get('/items', checkUser, function (req, res) {
     });
 });
 
-// app.post("/api/items", checkUser, function (req, res) {
+// app.post('/api/items', checkUser, function (req, res) {
 //   console.log(req.body.item);
 //   api.walmart(req.body.item, (err, result) => {
 //     if (err) {
-//       console.log("error getting back to the server", err);
+//       console.log('error getting back to the server', err);
 //     } else {
 //       respon = JSON.parse(result.body);
 //       response = reshapeItems(respon.items);
@@ -138,10 +138,10 @@ app.post('/db/lists', function (req, res) {
 
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
-            console.log('Error from server inserting into List_Items', err);
+            console.log('Error from server inserting into List_Items');
             // res.sendStatus(404);
           } else {
-            console.log('Success inserting into List_Items', data);
+            console.log('Success inserting into List_Items');
             // res.sendStatus(201);
           }
         });
@@ -166,7 +166,7 @@ app.post('/db/lists', function (req, res) {
 //     }).then(() => {
 //     api.walmart(req.body.query, (err, result) => {
 //       if (err) {
-//         console.log("error getting back to the server", err);
+//         console.log('error getting back to the server', err);
 //       } else {
 //         respon = JSON.parse(result.body);
 //         response = reshapeItems(respon.items);
@@ -182,7 +182,7 @@ app.post('/db/lists', function (req, res) {
 app.post('/api/walmart', function (req, res) {
   walmart(req.body.query, (err, result) => {
     if (err) {
-      console.log("error getting back to the server", err);
+      console.log('error getting back to the server', err);
     } else {
       respon = JSON.parse(result.body);
       response = reshapeItems(respon.items);

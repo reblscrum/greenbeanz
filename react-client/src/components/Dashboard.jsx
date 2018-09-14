@@ -2,9 +2,8 @@ import React from 'react';
 import $ from 'jquery';
 // import ShoppingList from 'ShoppingList.jsx';
 // import List from './List';
+import Cart from './Cart.jsx';
 import UserList from './UserList.jsx';
-import Cart from '../components/Cart.jsx';
-
 class Dashboard extends React.Component {
 
   constructor(props) {
