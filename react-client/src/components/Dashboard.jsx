@@ -2,8 +2,8 @@ import React from 'react';
 import $ from 'jquery';
 // import ShoppingList from 'ShoppingList.jsx';
 // import List from './List';
-import Cart from '../components/Cart.jsx';
-
+import Cart from './Cart.jsx';
+import UserList from './UserList.jsx';
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -63,11 +63,7 @@ class Dashboard extends React.Component {
               {/* <em className="options" onClick={this.changeScreen.bind(this)}>Set Budget</em> */}
               {this.state.usersLists.map((list, i) => {
                 return (
-                  <div key={i} className="savedList">
-                    <div style={{fontWeight: 'bold'}} > <em> {list.name} </em> </div>
-                    <a style={{ color: '#3fae42' }}> {list.budget} </a> budget.
-                    {/* <input type="button" value="Edit List" /> */}
-                  </div>
+                  <UserList key={i} list={list} />
                 );
               })
               }
