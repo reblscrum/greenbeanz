@@ -138,10 +138,10 @@ app.post('/db/lists', function (req, res) {
 
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
-            console.log('Error from server inserting into List_Items', err);
+            console.log('Error from server inserting into List_Items');
             // res.sendStatus(404);
           } else {
-            console.log('Success inserting into List_Items', data);
+            console.log('Success inserting into List_Items');
             // res.sendStatus(201);
           }
         });
