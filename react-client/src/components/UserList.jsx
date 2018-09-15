@@ -31,15 +31,12 @@ class UserList extends Component {
   }
 
   getTotal() {
-    const total = this.state.items.reduce((total, item) => {
-      console.log('item price', item.price);
+    const grandTotal = this.state.items.reduce((total, item) => {
       const number = Number(item.price);
       total += number;
       return total;
     }, 0);
-    console.log('Here is a total', total);
-
-    return total;
+    return Math.round(grandTotal * 100) / 100;
   }
 
   render() {
