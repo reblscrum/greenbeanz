@@ -55,6 +55,7 @@ class App extends React.Component {
     // let newItem = JSON.parse(e.target.name);
     const options = JSON.parse(e.target.name);
     console.log('e.target.name', options);
+    options.price = (options.price + '').replace(/[^\d.-]/g, '');
     let add = this.state.shoppingList;
 
     $.post('/db/items', options, (data) => {
