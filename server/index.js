@@ -12,6 +12,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const checkUser = require('../helpers/checkUser');
 const reshapeItems = require('../helpers/reshapeItems');
+const bcrypt = require('bcrypt');
+
 
 // Passport strategy
 passport.use(new LocalStrategy(
@@ -21,10 +23,17 @@ passport.use(new LocalStrategy(
         if (user.rowCount === 0) {
           return cb(null, false);
         }
-        if (user.rows[0].password !== password) {
+        if (bcrypt.compareSync(password, user.rows[0].password)) {
+          // Passwords match
+          return cb(null, user.rows[0]);
+        } else {
           return cb(null, false);
+          // Passwords don't match
         }
-        return cb(null, user.rows[0]);
+        // if (user.rows[0].password !== password) {
+        //   return cb(null, false);
+        // }
+        // return cb(null, user.rows[0]);
       })
       .catch(err => {
         return cb(err);
@@ -56,6 +65,7 @@ app.use(passport.session());
 
 // USER VERIFICATION
 app.post('/users/signup', (req, res) => {
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
   db.addUser(req.body)
     .then(data => {
       res.send(data);
