@@ -6,18 +6,18 @@ import ShoppingList from './components/ShoppingList.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import getHebData from './services/getHebData.jsx';
 import logoutService from './services/logoutService.jsx';
+import './styles/style.css';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: {
-        walmart: [],
-        wholeFoods: [],
-        heb: []
-      },
+      walmart: [],
+      wholeFoods: [],
+      heb: [],
       query: '',
+      finalQuery: '',
       existingLists: [
         { name: 'list1', items: [1, 2, 3, 4] },
         { name: 'list2', items: [2, 5, 7] },
@@ -55,6 +55,7 @@ class App extends React.Component {
     // let newItem = JSON.parse(e.target.name);
     const options = JSON.parse(e.target.name);
     console.log('e.target.name', options);
+    options.price = (options.price + '').replace(/[^\d.-]/g, '');
     let add = this.state.shoppingList;
 
     $.post('/db/items', options, (data) => {
@@ -68,16 +69,34 @@ class App extends React.Component {
   }
 
   searchItem() {
+    this.state.finalQuery = this.state.query;
     $.ajax({
-      url: '/api/items',
+      url: '/api/walmart',
       method: 'POST',
       data: {
         query: this.state.query
       },
       success: (res) => {
         console.log(res);
-        this.setState({ items: res });
+        this.setState({ walmart: res });
         this.setState({ query: '' });
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+    getHebData(this.state.query, (result) => {
+      this.setState({heb: result});
+    });
+    $.ajax({
+      url: '/api/wholeFoods',
+      method: 'POST',
+      data: {
+        query: this.state.query
+      },
+      success: (res) => {
+        console.log(res);
+        this.setState({ wholeFoods: res });
       },
       error: (error) => {
         console.log(error);
@@ -117,7 +136,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Dashboard items={this.state.items} query={this.state.query} query={this.state.query} shoppingList={this.state.shoppingList}
+      <Dashboard walmart={this.state.walmart} heb={this.state.heb} wholeFoods={this.state.wholeFoods} finalQuery={this.state.finalQuery} query={this.state.query} shoppingList={this.state.shoppingList}
         existingLists={this.state.existingLists} logout={this.handleLogout}
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
       />);

@@ -115,10 +115,16 @@ const fetchUsersLists = (options, callback) => {
 };
 
 const fetchListItems = (options, callback) => {
-  const query = 'SELECT * FROM items INNER JOIN lists on lists.user_id = items.user_id AND lists.user_id = $1 AND lists.id = $2;';
+  const query = 'SELECT items.name, items.price FROM items INNER JOIN lists on lists.user_id = items.user_id AND lists.user_id = $1 AND lists.id = $2;';
   const params = [options.userId, options.listId];
   queryDatabase(query, params, callback);
 };
 
-module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername, fetchUsersLists, fetchListItems };
+const findListId = (options, callback) => {
+  const query = 'SELECT lists.id FROM lists WHERE lists.name = $1';
+  const params = [options.listName];
+  queryDatabase(query, params, callback);
+};
+
+module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername, fetchUsersLists, fetchListItems, findListId};
 
