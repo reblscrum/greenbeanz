@@ -23,10 +23,6 @@ class ShoppingList extends React.Component {
     return total.toFixed(2);
   }
 
-  checkBox() {
-
-  }
-
   editList() {
     let oppState = (!this.state.editMode);
     this.setState({ editMode: oppState });
@@ -93,8 +89,7 @@ class ShoppingList extends React.Component {
               {this.state.editMode ?
                 (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
               <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
-              
-              <div className="id">{stuff.itemId}</div>
+              <div className="id">{stuff.store_name}</div>
               <br />
             </div>
           );

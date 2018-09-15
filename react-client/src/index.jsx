@@ -96,10 +96,6 @@ class App extends React.Component {
   }
 
 
-  removeItem() {
-
-  }
-
   saveList(e) {
     /*_____________________________________ 
     moved this function to shoppingList.jsx 

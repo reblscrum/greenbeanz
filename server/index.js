@@ -193,35 +193,6 @@ app.post('/db/list/save', (req, res) => {
   });
 });
 
-// app.post('/api/items', function (req, res) {
-//   // console.log(req.body.item);
-//   let allResults = {
-//     walmart: [],
-//     wholeFoods: [],
-//     heb: []
-//   };
-
-//   heb
-//     .scrape(req.body.query)
-//     .then(results => {
-//       // res.json(results);
-//       allResults.heb = results;
-//     }).then(() => {
-//     api.walmart(req.body.query, (err, result) => {
-//       if (err) {
-//         console.log('error getting back to the server', err);
-//       } else {
-//         respon = JSON.parse(result.body);
-//         response = reshapeItems(respon.items);
-//         // res.send(response);
-//         allResults.walmart = response;
-//         res.send(allResults);
-//       }
-//     })
-//   });
-
-// });
-
 app.post('/api/walmart', function (req, res) {
   walmart(req.body.query, (err, result) => {
     if (err) {
