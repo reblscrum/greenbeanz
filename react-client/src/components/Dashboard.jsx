@@ -22,8 +22,8 @@ class Dashboard extends React.Component {
   }
 
   changeScreen() {
-    this.state.currentScreen === 'dashboard' ? this.setState({ currentScreen: 'cart' }) : this.setState({ currentScreen: 'dashboard' });
-    this.reset();
+    this.state.currentScreen === 'dashboard' ? this.setState({ currentScreen: 'cart' }) : this.setState({ currentScreen: 'dashboard' }, ()=>this.getLists());
+    this.reset();    
   }
 
   handleShowMore() {
