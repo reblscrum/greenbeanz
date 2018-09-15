@@ -2,7 +2,9 @@ config.js
 react-client/client/dist/bundle.js
 .env
 /node_modules
+./react-client/dist/login/login.js
 /react-client/dist/login/login.js
 react-client/dist/login/login.js
 /react-client/dist/app/app.js
 react-client/dist/app/app.js
+./react-client/dist/app/app.js
