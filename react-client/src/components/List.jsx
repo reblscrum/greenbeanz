@@ -7,7 +7,7 @@ const List = (props) => (
     {/* <h5>There are {props.items.length} items. </h5> */}
     <br />
     {props.items.slice(0, props.showItems).map((item, i) => {
-      return <ListItem key={i} item={item} addItem={props.addItem} />;
+      return <ListItem store={props.store} query={props.query} key={i} item={item} addItem={props.addItem}  />;
     })}
   </div>
 );
