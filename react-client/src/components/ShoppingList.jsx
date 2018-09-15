@@ -62,7 +62,6 @@ class ShoppingList extends React.Component {
   }
 
   saveList() {
-    // console.log('addList fired');
     //Saves list to DB pass in userId, currently set to 1
     const options = {
       listName: this.state.listName,
@@ -70,10 +69,10 @@ class ShoppingList extends React.Component {
       // shopList: this.props.shopList
     };
     $.post('/db/lists', options, (data) => {
-      console.log('got data back', data);
+      this.setState({editMode: false});
     });
   }
-  // <input type="checkbox" name={stuff.name} id="" />
+
   render() {
     // console.log(this.props)
     return (
@@ -86,10 +85,7 @@ class ShoppingList extends React.Component {
             <a className="label">Name your list: </a> 
             <input type="text" value={this.state.listName} onChange={this.handleChange} />
             <button type="submit" value="save name" onClick={this.saveList}>Save</button>
-          </label> 
-        ) : 
-          ('')
-        }
+          </label>) : ('')}
 
         {this.props.shopList.map((stuff, i) => {
           return (

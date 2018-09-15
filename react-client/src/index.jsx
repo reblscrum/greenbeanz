@@ -18,17 +18,8 @@ class App extends React.Component {
       heb: [],
       query: '',
       finalQuery: '',
-      existingLists: [
-        { name: 'list1', items: [1, 2, 3, 4] },
-        { name: 'list2', items: [2, 5, 7] },
-        { name: 'list3', items: [2, 5, 7, 2, 5, 8, 3] }
-      ],
-      shoppingList: [
-        { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
-        { name: 'Organic Green Beans', price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
-        { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
-        { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
-      ],
+      existingLists: [],
+      shoppingList: [],
     };
   }
 
