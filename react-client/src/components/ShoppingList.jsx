@@ -57,6 +57,7 @@ class ShoppingList extends React.Component {
     };
     $.post('/db/lists', options, (data) => {
       this.setState({ editMode: false });
+      props.getLists();
     });
   }
 
