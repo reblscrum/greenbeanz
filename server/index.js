@@ -123,30 +123,63 @@ app.get('/items', checkUser, function (req, res) {
 //was /db/items
 app.post('/db/lists', function (req, res) {
   const options = req.body;
-  options.userId = req.session.passport.user;
+  console.log('what is req.user', req.user);
+  options.userId = req.user.id;
   db.insertList(options, (err, data) => {
     if (err) {
       console.log('Error adding list from server', err);
     } else {
       console.log('Added to list from server', data);
-      options.shopList.map(itemObj => {
-        // console.log('Here are my itemObjs ----------------', itemObj);
-        const moreOptions = {
-          listId: 1,
-          itemId: itemObj.itemId
-        };
+      res.send(data);
+      // options.shopList.map(itemObj => {
+      //   // console.log('Here are my itemObjs ----------------', itemObj);
+      //   const moreOptions = {
+      //     listId: 1,
+      //     itemId: itemObj.itemId
+      //   };
 
+      //   db.insertListItems(moreOptions, (err, data) => {
+      //     if (err) {
+      //       console.log('Error from server inserting into List_Items');
+      //       // res.sendStatus(404);
+      //     } else {
+      //       console.log('Success inserting into List_Items');
+      //       // res.sendStatus(201);
+      //     }
+      //   });
+      // });
+    }
+  });
+});
+
+app.post('/db/list/save', (req, res) => {
+  const options = req.body;
+  console.log('here are options now', options);
+  options.userId = req.session.passport.id;
+  db.findListId(options, (err, data) => {
+    if (err) {
+      console.log('error finding lists in db', err);
+    } else if (data.rows.length > 0) {
+      console.log('Got data fetching listId', data);
+      
+      options.shoppingList.map(itemObj => {
+        const moreOptions = {
+          listId: data.rows[0].id,
+          itemId: itemObj.id
+        };
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
             console.log('Error from server inserting into List_Items');
-            // res.sendStatus(404);
           } else {
             console.log('Success inserting into List_Items');
-            // res.sendStatus(201);
           }
         });
       });
+    
+    } else {
+      console.log('Failed to find list');
     }
+    
   });
 });
 
@@ -219,7 +252,6 @@ app.post('/api/wholeFoods', checkUser, (req, res) => {
 app.post('/db/remove/items', checkUser, (req, res) => {
   //options object should have an uniqueID for which item to be remove
   //also include the db table to remove from
-  console.log('Here is a req body', req.body);
   const options = {
     id: req.body.id,
     tableName: 'items'
@@ -237,7 +269,7 @@ app.post('/db/remove/items', checkUser, (req, res) => {
 
 app.post('/db/items', checkUser, (req, res) => {
   const body = req.body;
-  body.user_id = req.session.passport.user;
+  body.user_id = req.user.id;
   db.insertOne(body, (err, savedData) => {
     if (err) {
       console.log('Error insertOne at /db/items', err);
@@ -251,7 +283,7 @@ app.post('/db/items', checkUser, (req, res) => {
 
 app.get('/db/users/lists', checkUser, (req, res) => {
   const options = {
-    userId: req.session.passport.user
+    userId: req.user.id
   };
   db.fetchUsersLists(options, (err, results) => {
     // let responseBody = []; 
@@ -267,7 +299,7 @@ app.get('/db/users/lists', checkUser, (req, res) => {
 
 app.post('/db/users/listItems', (req, res) => {
   const options = {
-    userId: req.session.passport.user,
+    userId: req.user.id,
     listId: req.body.listId
   };
 

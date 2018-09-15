@@ -10,7 +10,8 @@ class ShoppingList extends React.Component {
       listName: ''
     };
     this.handleChange = this.handleChange.bind(this);
-    this.addList = this.addList.bind(this);
+    this.saveItems = this.saveItems.bind(this);
+    this.saveList = this.saveList.bind(this);
   }
 
 
@@ -49,13 +50,24 @@ class ShoppingList extends React.Component {
     this.setState({ listName: e.target.value });
   }
 
-  addList() {
+  saveItems() {
+    const options = {
+      listName: this.state.listName,
+      shoppingList: this.props.shopList
+    };
+
+    $.post('/db/list/save', options, (data) => {
+      console.log('recieved some data', data);
+    });
+  }
+
+  saveList() {
     // console.log('addList fired');
     //Saves list to DB pass in userId, currently set to 1
     const options = {
       listName: this.state.listName,
-      budget: 500,
-      shopList: this.props.shopList
+      budget: 500
+      // shopList: this.props.shopList
     };
     $.post('/db/lists', options, (data) => {
       console.log('got data back', data);
@@ -69,7 +81,15 @@ class ShoppingList extends React.Component {
         {/* changes the name of the List as you enter */}
         <h2>{this.state.listName.length === 0 ? 'My List' : this.state.listName}</h2>
         {/* allows you to change the list name after pressing edit */}
-        {this.state.editMode ? ( <label> <a className="label">Name your list: </a> <input type="text" value={this.state.listName} onChange={this.handleChange} /></label> ) : ('')}
+        {this.state.editMode ? ( 
+          <label> 
+            <a className="label">Name your list: </a> 
+            <input type="text" value={this.state.listName} onChange={this.handleChange} />
+            <button type="submit" value="save name" onClick={this.saveList}>Save</button>
+          </label> 
+        ) : 
+          ('')
+        }
 
         {this.props.shopList.map((stuff, i) => {
           return (
@@ -93,7 +113,7 @@ class ShoppingList extends React.Component {
         {this.props.shopList.length > 0 ? (
           <div className="shoppingBtns" >
             <input type="button" value="Edit List" onClick={this.editList.bind(this)} />
-            <input type="button" value="Save List" onClick={this.addList} />
+            <input type="button" value="Save List" onClick={this.saveItems} />
           </div>
         ) : <br />}
       </div>

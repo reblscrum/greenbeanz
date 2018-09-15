@@ -120,5 +120,11 @@ const fetchListItems = (options, callback) => {
   queryDatabase(query, params, callback);
 };
 
-module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername, fetchUsersLists, fetchListItems };
+const findListId = (options, callback) => {
+  const query = 'SELECT lists.id FROM lists WHERE lists.name = $1';
+  const params = [options.listName];
+  queryDatabase(query, params, callback);
+};
+
+module.exports = { selectAll, insertOne, findUser, addUser, checkPassword, deleteItem, insertList, insertListItems, findUserById, findUserByUsername, fetchUsersLists, fetchListItems, findListId};
 
