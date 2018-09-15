@@ -17,6 +17,10 @@ module.exports = {
         test: /\.jsx?/,
         include: SRC_DIR,
         use: ['babel-loader', 'eslint-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   }
