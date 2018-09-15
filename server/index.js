@@ -162,7 +162,7 @@ app.post('/db/lists', function (req, res) {
   });
 });
 
-app.post('/db/list/save', (req, res) => {
+app.post('/db/list/save', checkUser, (req, res) => {
   const options = req.body;
   console.log('here are options now', options);
   options.userId = req.session.passport.id;
