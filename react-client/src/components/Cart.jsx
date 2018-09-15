@@ -9,7 +9,7 @@ const Cart = (props) => {
         <div id="mySidenav" className="sidenav">
           <div className="content">
             <em className="back" onClick={props.changeScreen} >  Back To Dash > </em>
-            <ShoppingList shopList={props.shoppingList} saveList={props.saveList} />
+            <ShoppingList shopList={props.shoppingList} saveList={props.saveList} changeScreen={props.changeScreen} reset={props.reset}/>
           </div>
         </div>
       </div>

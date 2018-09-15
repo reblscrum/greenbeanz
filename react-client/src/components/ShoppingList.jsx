@@ -53,7 +53,7 @@ class ShoppingList extends React.Component {
     };
 
     $.post('/db/list/save', options, (data) => {
-      console.log('recieved some data', data);
+      this.props.changeScreen;
     });
   }
 
@@ -65,34 +65,60 @@ class ShoppingList extends React.Component {
       // shopList: this.props.shopList
     };
     $.post('/db/lists', options, (data) => {
-      this.setState({editMode: false});
+      this.setState({ editMode: false });
     });
   }
 
   render() {
     // console.log(this.props)
+    this.props.reset;
     return (
       <div className={this.state.listName}>
         {/* changes the name of the List as you enter */}
         <h2>{this.state.listName.length === 0 ? 'My List' : this.state.listName}</h2>
         {/* allows you to change the list name after pressing edit */}
-        {this.state.editMode ? ( 
-          <label> 
-            <a className="label">Name your list: </a> 
+        {this.state.editMode ? (
+          <label>
+            <a className="label">Name your list: </a>
             <input type="text" value={this.state.listName} onChange={this.handleChange} />
             <button type="submit" value="save name" onClick={this.saveList}>Save</button>
           </label>) : ('')}
 
         {this.props.shopList.map((stuff, i) => {
-          return (
-            <div className="indivItem" key={i}>
-              {this.state.editMode ?
-                (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
-              <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
-              <div className="id">{stuff.store_name}</div>
-              <br />
-            </div>
-          );
+          if (stuff.store_name === 'Walmart') {
+            return (
+              <div className="indivItem" key={i}>
+                <h4>Walmart</h4>
+                {this.state.editMode ?
+                  (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
+                <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
+                <div className="id">{stuff.store_name}</div>
+                <br />
+              </div>
+            );
+          } else if (stuff.store_name === 'HEB') {
+            return (
+              <div className="indivItem" key={i}>
+                <h4>HEB</h4>
+                {this.state.editMode ?
+                  (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
+                <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
+                <div className="id">{stuff.store_name}</div>
+                <br />
+              </div>
+            );
+          } else {
+            return (
+              <div className="indivItem" key={i}>
+                <h4>Whole Foods</h4>
+                {this.state.editMode ?
+                  (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
+                <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
+                <div className="id">{stuff.store_name}</div>
+                <br />
+              </div>
+            );
+          }
         })
         }
 
