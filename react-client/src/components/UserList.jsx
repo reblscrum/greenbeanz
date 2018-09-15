@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import UserListItem from './UserListItem.jsx';
 
 class UserList extends Component {
   constructor(props) {
@@ -22,7 +21,9 @@ class UserList extends Component {
       listId: this.props.list.id
     };
     $.post('/db/users/listItems', options, data => {
+      console.log(data);
       this.setState({ items: data });
+      console.log(this.state.items);
     });
   }
 
@@ -41,30 +42,23 @@ class UserList extends Component {
   generateTable(items) {
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
-    console.log('here are my items: ', items);
     for (var i = 0; i < items.length; i++) {
-      console.log('inspecting item: ', items[i], ' with query: ', items[i].query);
       if (items[i].query !== row[0]) {
-        console.log('finished a row, adding to rows: ');
         rows.push(row.slice());
-        console.log('current rowS:');
         row[0] = items[i].query;
         row[1] = '---';
         row[2] = '---';
         row[3] = '---';
       }
       if (items[i].store_name === 'Walmart') {
-        row[1] = items[i].name + ': $' + items[i].price;
+        row[1] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'HEB') {
-        row[2] = items[i].name + ': $' + items[i].price;
+        row[2] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'Whole Foods') {
-        row[3] = items[i].name + ': $' + items[i].price;
+        row[3] = items[i].item_name + ': $' + items[i].price;
       }
     }
     rows.push(row);
-    console.log('finished making my rows, here they are:');
-    rows.forEach((row, i) => console.log('row ', i, ' : ', row));
-    // return (<h4>oops</h4>);
     return (
       <table>
         <tbody>
@@ -74,8 +68,8 @@ class UserList extends Component {
             <th>HEB</th>
             <th>Whole Foods</th>
           </tr>
-          {rows.map(row => (
-            <tr>
+          {rows.map((row, i) => (
+            <tr key={row[0]}>
               <td>{row[0]}</td>
               <td>{row[1]}</td>
               <td>{row[2]}</td>
@@ -103,13 +97,7 @@ class UserList extends Component {
     if (this.state.clicked) {
       return (
         <div className="usersList">
-          <div> Items: </div>
-          <ul>
-            {this.state.items.map((item, i) => {
-              return <UserListItem key={i} item={item} />;
-            })}
-          </ul>
-          <div> ItemTable: </div>
+          <div> Items </div>
           {this.generateTable(this.state.items)}
           <div>
             <button className="collapse" onClick={this.handleClick}>
