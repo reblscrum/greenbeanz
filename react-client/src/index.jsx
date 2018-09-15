@@ -6,6 +6,7 @@ import ShoppingList from './components/ShoppingList.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import getHebData from './services/getHebData.jsx';
 import logoutService from './services/logoutService.jsx';
+import './styles/style.css';
 
 
 class App extends React.Component {

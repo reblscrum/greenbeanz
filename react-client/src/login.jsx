@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import LoginForm from './components/LogInForm.jsx';
 import loginService from './services/loginService.jsx';
 import signupService from './services/signupService.jsx';
+import './styles/style.css';
 
 class Login extends React.Component {
   constructor(props) {
