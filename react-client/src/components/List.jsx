@@ -3,8 +3,6 @@ import ListItem from './ListItem.jsx';
 
 const List = (props) => (
   <div className="searchRes">
-    {/* <h4> List Component </h4> */}
-    {/* <h5>There are {props.items.length} items. </h5> */}
     <br />
     {props.items.slice(0, props.showItems).map((item, i) => {
       return <ListItem store={props.store} query={props.query} key={i} item={item} addItem={props.addItem} />;
@@ -12,5 +10,4 @@ const List = (props) => (
   </div>
 );
 
-// {props.items.map((item, i) => <ListItem key={i} item={item} addItem={props.addItem}/>)}
 export default List;
