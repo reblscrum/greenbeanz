@@ -115,8 +115,8 @@ const fetchUsersLists = (options, callback) => {
 };
 
 const fetchListItems = (options, callback) => {
-  const query = 'SELECT *, items.name as item_name, items.id as item_id FROM items INNER JOIN lists on lists.user_id = items.user_id AND lists.user_id = $1 AND lists.id = $2;';
-  const params = [options.userId, options.listId];
+  const query = 'select i.name, i.price, i.store_name, i.query from lists_items as l_i inner join items as i on l_i.lists_id = $1 and i.id = l_i.items_id group by i.id;';
+  const params = [options.listId];
   queryDatabase(query, params, callback);
 };
 

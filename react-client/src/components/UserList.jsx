@@ -50,6 +50,7 @@ class UserList extends Component {
   }
 
   generateTable(items) {
+    console.log(items);
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
     let wmTotal = 0;
@@ -65,13 +66,13 @@ class UserList extends Component {
       }
       if (items[i].store_name === 'Walmart') {
         wmTotal += items[i].price * 1;
-        row[1] = items[i].item_name + ': $' + items[i].price;
+        row[1] = items[i].name + ': $' + items[i].price;
       } else if (items[i].store_name === 'HEB') {
         hebTotal += items[i].price * 1;
-        row[2] = items[i].item_name + ': $' + items[i].price;
+        row[2] = items[i].name + ': $' + items[i].price;
       } else if (items[i].store_name === 'Whole Foods') {
         wfTotal += items[i].price * 1;
-        row[3] = items[i].item_name + ': $' + items[i].price;
+        row[3] = items[i].name + ': $' + items[i].price;
       }
     }
     rows.push(row);
