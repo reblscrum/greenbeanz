@@ -18,17 +18,12 @@ class App extends React.Component {
       heb: [],
       query: '',
       finalQuery: '',
-      existingLists: [
-        { name: 'list1', items: [1, 2, 3, 4] },
-        { name: 'list2', items: [2, 5, 7] },
-        { name: 'list3', items: [2, 5, 7, 2, 5, 8, 3] }
-      ],
-      shoppingList: [
-        { name: 'Green Beans', price: 1, itemId: 'GB Co.', image: 'blah.png', desc: 'stuff' },
-        { name: 'Organic Green Beans', price: 3, itemId: 'Organico', image: 'blah.png', desc: 'stuff' },
-        { name: 'Minced Green Beans', price: 2.5, itemId: 'Minced Co', image: 'blah.png', desc: 'stuff' },
-        { name: 'Mashed Green Beans', price: 4, itemId: 'Mush Much', image: 'blah.png', desc: 'stuff' }
-      ],
+      existingLists: [],
+      shoppingList: [],
+      // shoppingList totals below
+      'Walmart': 0,
+      'HEB': 0,
+      'Whole Foods': 0
     };
   }
 
@@ -48,6 +43,23 @@ class App extends React.Component {
 
   }
 
+  calculator() {
+    console.log('HI!');
+    let total = {
+      'Walmart': 0,
+      'HEB': 0,
+      'Whole Foods': 0
+    };
+    this.state.shoppingList.map(obj => {
+      // if(total.hasOwnProperty(obj.store_name)) {
+      total[obj.store_name] += Number(obj.price);
+      // }
+    });
+    this.setState({ Walmart: total.Walmart });
+    this.setState({ HEB: total.HEB });
+    this.setState({ ['Whole Foods']: total['Whole Foods'] });
+    // return total.toFixed(2);
+  }
 
   addItem(e) {
     const options = JSON.parse(e.target.name);
@@ -60,6 +72,7 @@ class App extends React.Component {
       console.log('options after adding itemId field', options);
       add.push(options);
       this.setState({ shoppingList: add });
+      this.calculator();
     });
   }
 
@@ -104,10 +117,6 @@ class App extends React.Component {
   }
 
 
-  removeItem() {
-
-  }
-
   saveList(e) {
     /*_____________________________________ 
     moved this function to shoppingList.jsx 
@@ -137,7 +146,8 @@ class App extends React.Component {
     return (
       <Dashboard walmart={this.state.walmart} heb={this.state.heb} wholeFoods={this.state.wholeFoods} finalQuery={this.state.finalQuery} query={this.state.query} shoppingList={this.state.shoppingList}
         existingLists={this.state.existingLists} logout={this.handleLogout}
-        search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)}
+        search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)} wmTotal={this.state.Walmart} hebTotal={this.state.HEB} wfTotal={this.state['Whole Foods']}
+        calculator={this.calculator.bind(this)}
       />);
   }
 }
