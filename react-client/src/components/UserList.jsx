@@ -42,6 +42,9 @@ class UserList extends Component {
   generateTable(items) {
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
+    let wmTotal = 0;
+    let hebTotal = 0;
+    let wfTotal = 0;
     for (var i = 0; i < items.length; i++) {
       if (items[i].query !== row[0]) {
         rows.push(row.slice());
@@ -51,14 +54,18 @@ class UserList extends Component {
         row[3] = '---';
       }
       if (items[i].store_name === 'Walmart') {
+        wmTotal += items[i].price * 1;
         row[1] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'HEB') {
+        hebTotal += items[i].price * 1;
         row[2] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'Whole Foods') {
+        wfTotal += items[i].price * 1;
         row[3] = items[i].item_name + ': $' + items[i].price;
       }
     }
     rows.push(row);
+    rows.push(['total', wmTotal, hebTotal, wfTotal]);
     return (
       <table>
         <tbody>
