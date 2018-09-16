@@ -27,21 +27,6 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // $.ajax({
-    //   url: '/items', 
-    //   success: (data) => {
-    //     this.setState({
-    //       items: data
-    //     })
-    //   },
-    //   error: (err) => {
-    //     console.log('err', err);
-    //   }
-    // });
-
-  }
-
   calculator() {
     let total = {
       'Walmart': 0,
@@ -59,13 +44,11 @@ class App extends React.Component {
 
   addItem(e) {
     const options = JSON.parse(e.target.name);
-    console.log('e.target.name', options);
     options.price = (options.price + '').replace(/[^\d.-]/g, '');
     let add = this.state.shoppingList;
 
     $.post('/db/items', options, (data) => {
       options.itemId = data.rows[0].id;
-      console.log('options after adding itemId field', options);
       add.push(options);
       this.setState({ shoppingList: add });
       this.calculator();
@@ -85,7 +68,6 @@ class App extends React.Component {
         query: this.state.query
       },
       success: (res) => {
-        console.log(res);
         this.setState({ walmart: res });
         this.setState({ query: '' });
       },
@@ -103,35 +85,12 @@ class App extends React.Component {
         query: this.state.query
       },
       success: (res) => {
-        console.log(res);
         this.setState({ wholeFoods: res });
       },
       error: (error) => {
         console.log(error);
       }
     });
-  }
-
-
-  saveList(e) {
-    /*_____________________________________ 
-    moved this function to shoppingList.jsx 
-    _______________________________________*/
-    // console.log('event.target inside save list', e.target);
-    // console.log('Before hitting server', this.state.shoppingList);
-    // $.ajax({
-    //   url: '/db/items',
-    //   method: 'POST',
-    //   data: {
-    //     item: this.state.shoppingList
-    //   },
-    //   success: (res) => {
-    //     console.log('list has been added');
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //   }
-    // });
   }
 
   createNewList() {
@@ -149,7 +108,7 @@ class App extends React.Component {
     return (
       <Dashboard walmart={this.state.walmart} heb={this.state.heb} wholeFoods={this.state.wholeFoods} finalQuery={this.state.finalQuery} query={this.state.query} shoppingList={this.state.shoppingList}
         existingLists={this.state.existingLists} logout={this.handleLogout}
-        search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)} wmTotal={this.state.Walmart} hebTotal={this.state.HEB} wfTotal={this.state['Whole Foods']}
+        search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} wmTotal={this.state.Walmart} hebTotal={this.state.HEB} wfTotal={this.state['Whole Foods']}
         calculator={this.calculator.bind(this)} createNewList={this.createNewList.bind(this)}
       />);
   }
