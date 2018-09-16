@@ -1,18 +1,14 @@
--- USE 'testing';
+DROP TABLE IF EXISTS "users" CASCADE;
+CREATE TABLE "users" (
+"id"  SERIAL ,
+"name" VARCHAR(255) ,
+"password" VARCHAR(255) ,
+PRIMARY KEY ("id")
+);
 
--- DROP TABLE if EXISTS "users";
--- CREATE TABLE "users" (
--- "id"  SERIAL ,
--- "name" VARCHAR(255) ,
--- "password" VARCHAR(255) /* hash + salt */,
--- PRIMARY KEY ("id")
--- );
--- COMMENT ON TABLE "users" IS 'may need a few attributes for oAuth';
--- COMMENT ON COLUMN "users"."password" IS 'hash + salt';
-
--- DROP TABLE "items" CASCADE;
+DROP TABLE IF EXISTS "items" CASCADE;
 CREATE TABLE "items" (
-"id" SERIAL /* add id from api call */,
+"id" SERIAL ,
 "name" VARCHAR(255) ,
 "price" DECIMAL ,
 "image" VARCHAR(255) ,
@@ -21,9 +17,8 @@ CREATE TABLE "items" (
 "user_id" INT,
 PRIMARY KEY ("id")
 );
-COMMENT ON COLUMN "items"."id" IS 'add id from api call';
 
--- DROP TABLE  "lists" CASCADE;
+DROP TABLE IF EXISTS   "lists" CASCADE;
 CREATE TABLE "lists" (
 "id"  SERIAL ,
 "budget" INTEGER ,
@@ -32,7 +27,7 @@ CREATE TABLE "lists" (
 PRIMARY KEY ("id")
 );
 
--- DROP TABLE "lists_items" CASCADE;
+DROP TABLE IF EXISTS "lists_items" CASCADE;
 CREATE TABLE "lists_items" (
 "id"  SERIAL ,
 "lists_id" INTEGER ,
