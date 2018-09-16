@@ -21,9 +21,10 @@ class UserList extends Component {
       listId: this.props.list.id
     };
     $.post('/db/users/listItems', options, data => {
-      console.log(data);
+      // console.log(data);
+      // console.log(this.props.list.id);
       this.setState({ items: data });
-      console.log(this.state.items);
+      // console.log(this.state.items);
     });
   }
 
@@ -39,6 +40,18 @@ class UserList extends Component {
     }, 0);
     return Math.round(grandTotal * 100) / 100;
   }
+
+  listTotal(store) {
+    let total = 0;
+    let storeList = this.state.items.filter((item) => {
+      return (item.store_name === store);
+    });
+    console.log(storeList);
+    // return Math.round(total * 100) / 100;
+    // total += Number(item.price);
+    // return total.toFixed(2);
+  }
+
   generateTable(items) {
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
@@ -88,6 +101,7 @@ class UserList extends Component {
           <div style={{ fontWeight: 'bold' }}>
             {' '}
             <em> {this.props.list.name} </em>{' '}
+            <a className="listWalmart" >{this.listTotal('Walmart')}</a>
           </div>
           <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total.
           {/* <input type="button" value="Edit List" /> */}
@@ -97,12 +111,12 @@ class UserList extends Component {
     if (this.state.clicked) {
       return (
         <div className="usersList">
-          <div> Items </div>
+          <div className="shownListName"> {this.props.list.name}: </div>
           {this.generateTable(this.state.items)}
           <div>
-            <button className="collapse" onClick={this.handleClick}>
-              Hide
-            </button>
+            <div className="collapse">
+              <button onClick={this.handleClick}> Hide </button>
+            </div>
           </div>
         </div>
       );
