@@ -62,15 +62,14 @@ class App extends React.Component {
   }
 
   addItem(e) {
-    //send this.state.item to server
-    // console.log('Inside addItem', this.state.item);
-    // let newItem = JSON.parse(e.target.name);
     const options = JSON.parse(e.target.name);
     console.log('e.target.name', options);
     options.price = (options.price + '').replace(/[^\d.-]/g, '');
     let add = this.state.shoppingList;
 
     $.post('/db/items', options, (data) => {
+      options.itemId = data.rows[0].id;
+      console.log('options after adding itemId field', options);
       add.push(options);
       this.setState({ shoppingList: add });
       this.calculator();

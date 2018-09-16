@@ -73,7 +73,7 @@ const checkPassword = (username, callback) => {
 };
 
 const insertOne = (itemObj, callback) => {
-  const query = 'INSERT INTO items (name, price, image, store_name, query, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET price = $2;';
+  const query = 'INSERT INTO items (name, price, image, store_name, query, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET price = $2 RETURNING id;';
   const params = [itemObj.name, itemObj.price, itemObj.image, itemObj.store_name, itemObj.query, itemObj.user_id];
   queryDatabase(query, params, callback);
 };

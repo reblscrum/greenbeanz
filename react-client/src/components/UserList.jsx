@@ -21,8 +21,6 @@ class UserList extends Component {
       listId: this.props.list.id
     };
     $.post('/db/users/listItems', options, data => {
-      // console.log(data);
-      // console.log(this.props.list.id);
       this.setState({ items: data });
       // console.log(this.state.items);
     });
@@ -55,6 +53,9 @@ class UserList extends Component {
   generateTable(items) {
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
+    let wmTotal = 0;
+    let hebTotal = 0;
+    let wfTotal = 0;
     for (var i = 0; i < items.length; i++) {
       if (items[i].query !== row[0]) {
         rows.push(row.slice());
@@ -64,14 +65,18 @@ class UserList extends Component {
         row[3] = '---';
       }
       if (items[i].store_name === 'Walmart') {
+        wmTotal += items[i].price * 1;
         row[1] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'HEB') {
+        hebTotal += items[i].price * 1;
         row[2] = items[i].item_name + ': $' + items[i].price;
       } else if (items[i].store_name === 'Whole Foods') {
+        wfTotal += items[i].price * 1;
         row[3] = items[i].item_name + ': $' + items[i].price;
       }
     }
     rows.push(row);
+    rows.push(['total', wmTotal, hebTotal, wfTotal]);
     return (
       <table>
         <tbody>
@@ -82,7 +87,7 @@ class UserList extends Component {
             <th>Whole Foods</th>
           </tr>
           {rows.map((row, i) => (
-            <tr key={row[0]}>
+            <tr key={i}>
               <td>{row[0]}</td>
               <td>{row[1]}</td>
               <td>{row[2]}</td>
@@ -95,6 +100,8 @@ class UserList extends Component {
   }
 
   render() {
+    console.log('Here are props in Userlist', this.props);
+    console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
