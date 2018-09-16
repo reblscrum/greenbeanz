@@ -9,7 +9,6 @@ const getHebData = (searchTerm, cb) => {
     data: { query: searchTerm }
   })
     .then(results => {
-      console.log(results);
       if (cb) {
         cb(results);
       }
