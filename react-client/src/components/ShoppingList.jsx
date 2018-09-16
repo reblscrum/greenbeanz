@@ -79,7 +79,7 @@ class ShoppingList extends React.Component {
           return (
             <div className="indivItem" key={i}>
               {this.state.editMode ?
-                (<input type="button" value=" Remove " id={i} onClick={this.remove.bind(this)} />) : ('')}
+                (<input className="delete" type="button" value=" X " id={i} onClick={this.remove.bind(this)} />) : ('')}
               <a className="itemName"> {stuff.name} </a>  <div className="price">Price:  ${Number((stuff.price)).toFixed(2)}</div>
               <div className="id">{stuff.store_name}</div>
               <br />

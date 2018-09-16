@@ -105,16 +105,16 @@ class UserList extends Component {
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
-          <div style={{ fontWeight: 'bold' }}>
+          <div className="listTitle" style={{ fontWeight: 'bold' }}>
             {' '}
-            <em> {this.props.list.name} </em>{' '}
+            <em> {this.props.list.name}
+            </em>{' '}
           </div>
           <div className="listTotals">
-            <a className="listWalmart" >Walmart: ${this.listTotal('Walmart', this.state.items)}</a>
-            <a className="listHEB" >HEB: ${this.listTotal('HEB', this.state.items)}</a>
-            <a className="listWholeFoods" >Whole Foods: ${this.listTotal('Whole Foods', this.state.items)}</a>
+            <a className="listWalmart"> <em>Walmart: </em> ${this.listTotal('Walmart', this.state.items)}</a>
+            <a className="listHEB" ><em>HEB: </em>${this.listTotal('HEB', this.state.items)}</a>
+            <a className="listWholeFoods" ><em>Whole Foods: </em>${this.listTotal('Whole Foods', this.state.items)}</a>
           </div>
-          {/* <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total. */}
           {/* <input type="button" value="Edit List" /> */}
         </div>
       );
