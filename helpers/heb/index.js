@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 let scrape = async query => {
   let searchUrl = "https://www.heb.com/search/?q=" + query;
 
-  return puppeteer.launch({ headless: true }).then(async browser => {
+  return puppeteer.launch({ headless: true, args: ['--no-sandbox'] }).then(async browser => {
     const page = await browser.newPage();
     await page.setJavaScriptEnabled(true);
     await page.goto(searchUrl, { waitUntil: "domcontentloaded" });
