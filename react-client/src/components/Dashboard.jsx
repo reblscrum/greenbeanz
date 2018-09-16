@@ -19,10 +19,13 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     this.getLists();
+    // this.props.createNewList();
   }
 
   changeScreen() {
     this.state.currentScreen === 'dashboard' ? this.setState({ currentScreen: 'cart' }) : this.setState({ currentScreen: 'dashboard' }, ()=>this.getLists());
+    this.props.createNewList();
+    $('.results').empty();    
   }
 
   handleShowMore() {

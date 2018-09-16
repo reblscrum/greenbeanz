@@ -135,8 +135,10 @@ class App extends React.Component {
   }
 
   createNewList() {
-    console.log('newList?');
     this.setState({shoppingList: []});
+    this.setState({walmart: []});
+    this.setState({wholeFoods: []});
+    this.setState({heb: []});
   }
 
   handleLogout = () => {
