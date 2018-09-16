@@ -24,9 +24,7 @@ class ShoppingList extends React.Component {
       id
     };
     $.post('/db/remove/items', options, (data) => {
-      console.log('shopList before splice', this.props.shopList);
       this.props.shopList.splice(id, 1);
-      console.log('shopList after splice', this.props.shopList);
       this.props.calculator();
       this.forceUpdate();
     });
