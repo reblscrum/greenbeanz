@@ -131,51 +131,31 @@ app.get('/items', checkUser, function (req, res) {
 
 
 //was /db/items
-app.post('/db/lists', function (req, res) {
+app.post('/db/lists', checkUser, function (req, res) {
   const options = req.body;
   console.log('what is req.user', req.user);
   options.userId = req.user.id;
   db.insertList(options, (err, data) => {
     if (err) {
-      console.log('Error adding list from server', err);
+      console.log('Error adding list from server');
     } else {
-      console.log('Added to list from server', data);
+      console.log('Added to list from server');
       res.send(data);
-      // options.shopList.map(itemObj => {
-      //   // console.log('Here are my itemObjs ----------------', itemObj);
-      //   const moreOptions = {
-      //     listId: 1,
-      //     itemId: itemObj.itemId
-      //   };
-
-      //   db.insertListItems(moreOptions, (err, data) => {
-      //     if (err) {
-      //       console.log('Error from server inserting into List_Items');
-      //       // res.sendStatus(404);
-      //     } else {
-      //       console.log('Success inserting into List_Items');
-      //       // res.sendStatus(201);
-      //     }
-      //   });
-      // });
     }
   });
 });
 
-app.post('/db/list/save', (req, res) => {
+app.post('/db/list/save', checkUser, (req, res) => {
   const options = req.body;
-  console.log('here are options now', options);
-  options.userId = req.session.passport.id;
+  options.userId = req.user.id;
   db.findListId(options, (err, data) => {
     if (err) {
-      console.log('error finding lists in db', err);
+      console.log('error finding lists in db');
     } else if (data.rows.length > 0) {
-      console.log('Got data fetching listId', data);
-      
       options.shoppingList.map(itemObj => {
         const moreOptions = {
           listId: data.rows[0].id,
-          itemId: itemObj.id
+          itemId: itemObj.itemId
         };
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
@@ -222,7 +202,7 @@ app.post('/db/list/save', (req, res) => {
 
 // });
 
-app.post('/api/walmart', function (req, res) {
+app.post('/api/walmart', checkUser, function (req, res) {
   walmart(req.body.query, (err, result) => {
     if (err) {
       console.log('error getting back to the server', err);
@@ -268,10 +248,10 @@ app.post('/db/remove/items', checkUser, (req, res) => {
   };
   db.deleteItem(options, (err, data) => {
     if (err) {
-      console.log('Error from the Server', err);
+      console.log('Error deleting item from server');
       res.status(404);
     } else {
-      console.log('Success from server', data);
+      console.log('Success deleting item from server');
       res.sendStatus(201);
     }
   });
@@ -282,7 +262,7 @@ app.post('/db/items', checkUser, (req, res) => {
   body.user_id = req.user.id;
   db.insertOne(body, (err, savedData) => {
     if (err) {
-      console.log('Error insertOne at /db/items', err);
+      console.log('Error insertOne at /db/items');
       res.send(err);
     } else {
       console.log('Success inserting at /db/items', savedData);
@@ -296,27 +276,25 @@ app.get('/db/users/lists', checkUser, (req, res) => {
     userId: req.user.id
   };
   db.fetchUsersLists(options, (err, results) => {
-    // let responseBody = []; 
     if (err) {
       console.log('Logging error inside fetch from server');
     } else {
       res.send(results);
-      // //console.log('what are response in else statement', response);
     }
-    //console.log('response please', response);
   });
 });
 
-app.post('/db/users/listItems', (req, res) => {
+app.post('/db/users/listItems', checkUser, (req, res) => {
   const options = {
     userId: req.user.id,
     listId: req.body.listId
   };
-
+  console.log('Here are my options', options);
   db.fetchListItems(options, (err, results) => {
     if (err) {
       res.status(404);
     } else {
+      console.log('results.rows', results.rows);
       res.send(results.rows);
     }
   });
