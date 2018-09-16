@@ -22,21 +22,11 @@ class UserList extends Component {
     };
     $.post('/db/users/listItems', options, data => {
       this.setState({ items: data });
-      // console.log(this.state.items);
     });
   }
 
   handleClick() {
     this.setState({ clicked: !this.state.clicked });
-  }
-
-  getTotal() {
-    const grandTotal = this.state.items.reduce((total, item) => {
-      const number = Number(item.price);
-      total += number;
-      return total;
-    }, 0);
-    return Math.round(grandTotal * 100) / 100;
   }
 
   listTotal(store, list) {
@@ -76,7 +66,7 @@ class UserList extends Component {
       }
     }
     rows.push(row);
-    rows.push(['total', wmTotal, hebTotal, wfTotal]);
+    rows.push(['total', wmTotal.toFixed(2), hebTotal.toFixed(2), wfTotal.toFixed(2)]);
     return (
       <table>
         <tbody>
@@ -100,8 +90,6 @@ class UserList extends Component {
   }
 
   render() {
-    // console.log('Here are props in Userlist', this.props);
-    // console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
