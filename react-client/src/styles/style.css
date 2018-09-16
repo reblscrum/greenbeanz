@@ -319,3 +319,9 @@ h3 {
     margin: 10px;
     text-align: center;
 }
+
+.listTotals a {
+    padding-right: 30px;
+    font-size: 18px;
+    text-align: center;
+}

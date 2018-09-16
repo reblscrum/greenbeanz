@@ -44,6 +44,7 @@ class ShoppingList extends React.Component {
       shoppingList: this.props.shopList
     };
     this.props.changeScreen();
+    this.props.createNewList();
     $.post('/db/list/save', options, (data) => {
     });
   }
@@ -57,7 +58,7 @@ class ShoppingList extends React.Component {
     };
     $.post('/db/lists', options, (data) => {
       this.setState({ editMode: false });
-      props.getLists();
+      this.props.getLists();
     });
   }
 

@@ -39,15 +39,14 @@ class UserList extends Component {
     return Math.round(grandTotal * 100) / 100;
   }
 
-  listTotal(store) {
+  listTotal(store, list) {
     let total = 0;
-    let storeList = this.state.items.filter((item) => {
-      return (item.store_name === store);
+    list.map((item) => {
+      if (item.store_name === store) {
+        total += Number(item.price);
+      }
     });
-    console.log(storeList);
-    // return Math.round(total * 100) / 100;
-    // total += Number(item.price);
-    // return total.toFixed(2);
+    return total.toFixed(2);
   }
 
   generateTable(items) {
@@ -100,19 +99,21 @@ class UserList extends Component {
   }
 
   render() {
-    console.log('Here are props in Userlist', this.props);
-    console.log('here is this.state.items', this.state.items);
+    // console.log('Here are props in Userlist', this.props);
+    // console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
           <div style={{ fontWeight: 'bold' }}>
             {' '}
             <em> {this.props.list.name} </em>{' '}
-            <a className="listWalmart" >Walmart: </a>
-            <a className="listHEB" >HEB: </a>
-            <a className="listWholeFoods" >Whole Foods: </a>
           </div>
-          <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total.
+          <div className="listTotals">
+            <a className="listWalmart" >Walmart: ${this.listTotal('Walmart', this.state.items)}</a>
+            <a className="listHEB" >HEB: ${this.listTotal('HEB', this.state.items)}</a>
+            <a className="listWholeFoods" >Whole Foods: ${this.listTotal('Whole Foods', this.state.items)}</a>
+          </div>
+          {/* <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total. */}
           {/* <input type="button" value="Edit List" /> */}
         </div>
       );

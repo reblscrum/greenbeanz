@@ -28,7 +28,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
     // $.ajax({
     //   url: '/items', 
     //   success: (data) => {
@@ -44,16 +43,13 @@ class App extends React.Component {
   }
 
   calculator() {
-    console.log('HI!');
     let total = {
       'Walmart': 0,
       'HEB': 0,
       'Whole Foods': 0
     };
     this.state.shoppingList.map(obj => {
-      // if(total.hasOwnProperty(obj.store_name)) {
       total[obj.store_name] += Number(obj.price);
-      // }
     });
     this.setState({ Walmart: total.Walmart });
     this.setState({ HEB: total.HEB });
@@ -138,6 +134,11 @@ class App extends React.Component {
     // });
   }
 
+  createNewList() {
+    console.log('newList?');
+    this.setState({shoppingList: []});
+  }
+
   handleLogout = () => {
     logoutService();
   }
@@ -147,7 +148,7 @@ class App extends React.Component {
       <Dashboard walmart={this.state.walmart} heb={this.state.heb} wholeFoods={this.state.wholeFoods} finalQuery={this.state.finalQuery} query={this.state.query} shoppingList={this.state.shoppingList}
         existingLists={this.state.existingLists} logout={this.handleLogout}
         search={this.searchItem.bind(this)} addItem={this.addItem.bind(this)} handleInput={this.handleInput.bind(this)} saveList={this.saveList.bind(this)} wmTotal={this.state.Walmart} hebTotal={this.state.HEB} wfTotal={this.state['Whole Foods']}
-        calculator={this.calculator.bind(this)}
+        calculator={this.calculator.bind(this)} createNewList={this.createNewList.bind(this)}
       />);
   }
 }
