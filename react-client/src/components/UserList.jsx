@@ -21,7 +21,6 @@ class UserList extends Component {
       listId: this.props.list.id
     };
     $.post('/db/users/listItems', options, data => {
-      console.log(data);
       this.setState({ items: data });
       console.log(this.state.items);
     });
@@ -89,6 +88,8 @@ class UserList extends Component {
   }
 
   render() {
+    console.log('Here are props in Userlist', this.props);
+    console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
