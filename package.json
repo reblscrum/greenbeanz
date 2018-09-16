@@ -1,6 +1,9 @@
 {
   "name": "github-fetcher-fullstack-v2",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.8.0"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
