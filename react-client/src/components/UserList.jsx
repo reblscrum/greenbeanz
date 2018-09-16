@@ -10,7 +10,6 @@ class UserList extends Component {
     };
     this.getItems = this.getItems.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.getTotal = this.getTotal.bind(this);
   }
   componentDidMount() {
     this.getItems();
@@ -40,7 +39,6 @@ class UserList extends Component {
   }
 
   generateTable(items) {
-    console.log(items);
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
     let wmTotal = 0;
