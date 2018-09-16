@@ -2,9 +2,8 @@ const puppeteer = require("puppeteer");
 
 let scrape = async query => {
   let searchUrl = `https://primenow.amazon.com/search?k=${query}&p_95=A04H&merchantId=A1TBCG7XHKEQZY&ref_=pn_sr_nav_sr_A04H`;
-  // let searchUrl = `https://primenow.amazon.com/search?k=milk&p_95=A04H&merchantId=A1TBCG7XHKEQZY&ref_=pn_sr_nav_sr_A04H`;
 
-  return puppeteer.launch({ headless: true }).then(async browser => {
+  return puppeteer.launch({ headless: true, args: ['--no-sandbox'] }).then(async browser => {
     const page = await browser.newPage();
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
     await page.waitFor(500);
