@@ -59,8 +59,7 @@ class Dashboard extends React.Component {
                 <em className="options" onClick={this.changeScreen.bind(this)}>Create A New List</em>
               </h3>
               {/* <em className="options" onClick={this.changeScreen.bind(this)}>Set Budget</em> */}
-              {this.state.usersLists.map((list, i ) => <UserList key={i} list={list} />)
-              }
+              {this.state.usersLists.map((list, i ) => <UserList key={i} list={list} />)}
             </div>
           </div>
         </div>
@@ -69,7 +68,7 @@ class Dashboard extends React.Component {
       return <Cart shoppingList={this.props.shoppingList} finalQuery={this.props.finalQuery} query={this.props.query} walmart={this.props.walmart} heb={this.props.heb} wholeFoods={this.props.wholeFoods} changeScreen={this.changeScreen.bind(this)} 
         handleInput={this.props.handleInput} search={this.props.search} saveList={this.props.saveList} addItem={this.props.addItem} showItems={this.state.showItems} showMore={this.handleShowMore.bind(this)}
         showLess={this.handleShowLess.bind(this)} titles={this.state.storeTitles} changeScreen={this.changeScreen.bind(this)} reset={this.reset.bind(this)} 
-        wmTotal={this.props.wmTotal} hebTotal={this.props.hebTotal} wfTotal={this.props.wfTotal} calculator={this.props.calculator} getLists={this.getLists}
+        wmTotal={this.props.wmTotal} hebTotal={this.props.hebTotal} wfTotal={this.props.wfTotal} calculator={this.props.calculator} getLists={this.getLists} createNewList={this.props.createNewList}
       />;
     }
   }

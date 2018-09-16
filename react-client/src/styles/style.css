@@ -220,7 +220,7 @@ h5 {
 
 h3 {
     padding-top: 20px;
-    font-size: 35px;
+    font-size: 40px;
     text-decoration-line: underline;
 }
 
@@ -296,4 +296,32 @@ h3 {
 
 .totalField {
     padding-top: 10px;
+}
+
+.shownListName {
+    /* text-align: center; */
+    font-size: 30px;
+    font-weight: bold;
+    color: #3b4e5e;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    text-decoration: underline;
+}
+
+.usersList {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #f8f3e1;
+    margin-bottom: 10px;
+}
+
+.collapse {
+    margin: 10px;
+    text-align: center;
+}
+
+.listTotals a {
+    padding-right: 30px;
+    font-size: 18px;
+    text-align: center;
 }

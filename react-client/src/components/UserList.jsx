@@ -22,7 +22,7 @@ class UserList extends Component {
     };
     $.post('/db/users/listItems', options, data => {
       this.setState({ items: data });
-      console.log(this.state.items);
+      // console.log(this.state.items);
     });
   }
 
@@ -38,6 +38,17 @@ class UserList extends Component {
     }, 0);
     return Math.round(grandTotal * 100) / 100;
   }
+
+  listTotal(store, list) {
+    let total = 0;
+    list.map((item) => {
+      if (item.store_name === store) {
+        total += Number(item.price);
+      }
+    });
+    return total.toFixed(2);
+  }
+
   generateTable(items) {
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
@@ -88,8 +99,8 @@ class UserList extends Component {
   }
 
   render() {
-    console.log('Here are props in Userlist', this.props);
-    console.log('here is this.state.items', this.state.items);
+    // console.log('Here are props in Userlist', this.props);
+    // console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
@@ -97,7 +108,12 @@ class UserList extends Component {
             {' '}
             <em> {this.props.list.name} </em>{' '}
           </div>
-          <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total.
+          <div className="listTotals">
+            <a className="listWalmart" >Walmart: ${this.listTotal('Walmart', this.state.items)}</a>
+            <a className="listHEB" >HEB: ${this.listTotal('HEB', this.state.items)}</a>
+            <a className="listWholeFoods" >Whole Foods: ${this.listTotal('Whole Foods', this.state.items)}</a>
+          </div>
+          {/* <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total. */}
           {/* <input type="button" value="Edit List" /> */}
         </div>
       );
@@ -105,12 +121,12 @@ class UserList extends Component {
     if (this.state.clicked) {
       return (
         <div className="usersList">
-          <div> Items </div>
+          <div className="shownListName"> {this.props.list.name}: </div>
           {this.generateTable(this.state.items)}
           <div>
-            <button className="collapse" onClick={this.handleClick}>
-              Hide
-            </button>
+            <div className="collapse">
+              <button onClick={this.handleClick}> Hide </button>
+            </div>
           </div>
         </div>
       );
