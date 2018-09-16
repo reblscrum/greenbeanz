@@ -76,9 +76,10 @@ class UserList extends Component {
       }
     }
     rows.push(row);
-    rows.push(['total', wmTotal, hebTotal, wfTotal]);
+    // rows.push(['total', ('$' + wmTotal), ('$' + hebTotal), ('$' + wfTotal)]);
+    rows.push(['total', ('$' + wmTotal), ('$' + hebTotal), ('$' + wfTotal)]);
     return (
-      <table>
+      <table id='shopping'>
         <tbody>
           <tr>
             <th>Item Name</th>
