@@ -69,7 +69,7 @@ class UserList extends Component {
             <th>Whole Foods</th>
           </tr>
           {rows.map((row, i) => (
-            <tr key={row[0]}>
+            <tr key={i}>
               <td>{row[0]}</td>
               <td>{row[1]}</td>
               <td>{row[2]}</td>
