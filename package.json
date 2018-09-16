@@ -1,6 +1,9 @@
 {
   "name": "github-fetcher-fullstack-v2",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.8.0"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +11,7 @@
     "server-dev": "nodemon server/index.js",
     "start": "webpack -p && node ./server/index.js"
   },
-  "author": "Beth Johnson",
+  "author": "Daniel Kang",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.23.1",

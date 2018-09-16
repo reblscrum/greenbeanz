@@ -1,7 +1,7 @@
 require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
-var {walmart} = require('../helpers/walmart');
+var { walmart } = require('../helpers/walmart');
 var db = require('../database-psql/');
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -26,14 +26,9 @@ passport.use(new LocalStrategy(
         if (bcrypt.compareSync(password, user.rows[0].password)) {
           // Passwords match
           return cb(null, user.rows[0]);
-        } else {
-          return cb(null, false);
-          // Passwords don't match
         }
-        // if (user.rows[0].password !== password) {
-        //   return cb(null, false);
-        // }
-        // return cb(null, user.rows[0]);
+        // Passwords don't match
+        return cb(null, false);
       })
       .catch(err => {
         return cb(err);
@@ -89,7 +84,7 @@ app.get('/users/logout',
 
 
 // ROUTES
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
   if (req.user) {
     res.redirect('/app');
   } else {
@@ -133,13 +128,11 @@ app.get('/items', checkUser, function (req, res) {
 //was /db/items
 app.post('/db/lists', checkUser, function (req, res) {
   const options = req.body;
-  console.log('what is req.user', req.user);
   options.userId = req.user.id;
   db.insertList(options, (err, data) => {
     if (err) {
       console.log('Error adding list from server');
     } else {
-      console.log('Added to list from server');
       res.send(data);
     }
   });
@@ -151,6 +144,7 @@ app.post('/db/list/save', checkUser, (req, res) => {
   db.findListId(options, (err, data) => {
     if (err) {
       console.log('error finding lists in db');
+      res.sendStatus(500);
     } else if (data.rows.length > 0) {
       options.shoppingList.map(itemObj => {
         const moreOptions = {
@@ -160,16 +154,18 @@ app.post('/db/list/save', checkUser, (req, res) => {
         db.insertListItems(moreOptions, (err, data) => {
           if (err) {
             console.log('Error from server inserting into List_Items');
+            res.sendStatus(500);
           } else {
-            console.log('Success inserting into List_Items');
+            res.end();
           }
         });
       });
-    
+
     } else {
+      res.sendStatus(500);
       console.log('Failed to find list');
     }
-    
+
   });
 });
 
@@ -222,7 +218,6 @@ app.post('/db/remove/items', checkUser, (req, res) => {
       console.log('Error deleting item from server');
       res.status(404);
     } else {
-      console.log('Success deleting item from server');
       res.sendStatus(201);
     }
   });
@@ -236,7 +231,6 @@ app.post('/db/items', checkUser, (req, res) => {
       console.log('Error insertOne at /db/items');
       res.send(err);
     } else {
-      console.log('Success inserting at /db/items', savedData);
       res.send(savedData);
     }
   });
@@ -249,6 +243,7 @@ app.get('/db/users/lists', checkUser, (req, res) => {
   db.fetchUsersLists(options, (err, results) => {
     if (err) {
       console.log('Logging error inside fetch from server');
+      res.sendStatus(500);
     } else {
       res.send(results);
     }
@@ -257,15 +252,13 @@ app.get('/db/users/lists', checkUser, (req, res) => {
 
 app.post('/db/users/listItems', checkUser, (req, res) => {
   const options = {
-    userId: req.user.id,
     listId: req.body.listId
   };
-  console.log('Here are my options', options);
   db.fetchListItems(options, (err, results) => {
     if (err) {
+      console.log(err);
       res.status(404);
     } else {
-      console.log('results.rows', results.rows);
       res.send(results.rows);
     }
   });
