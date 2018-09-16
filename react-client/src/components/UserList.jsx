@@ -101,7 +101,9 @@ class UserList extends Component {
           <div style={{ fontWeight: 'bold' }}>
             {' '}
             <em> {this.props.list.name} </em>{' '}
-            <a className="listWalmart" >{this.listTotal('Walmart')}</a>
+            <a className="listWalmart" >Walmart: </a>
+            <a className="listHEB" >HEB: </a>
+            <a className="listWholeFoods" >Whole Foods: </a>
           </div>
           <a style={{ color: '#3fae42' }}> {this.getTotal()} </a> Total.
           {/* <input type="button" value="Edit List" /> */}
