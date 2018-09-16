@@ -20,7 +20,6 @@ class ShoppingList extends React.Component {
   }
   remove(e) {
     const id = e.target.id;
-    console.log('removing', e.target.id);
     const options = {
       id
     };
@@ -34,7 +33,6 @@ class ShoppingList extends React.Component {
   }
 
   handleChange(e) {
-    // console.log('Handling Change', e.target.value);
     this.setState({ listName: e.target.value });
   }
 
@@ -50,11 +48,9 @@ class ShoppingList extends React.Component {
   }
 
   saveList() {
-    //Saves list to DB pass in userId, currently set to 1
     const options = {
       listName: this.state.listName,
       budget: 500
-      // shopList: this.props.shopList
     };
     $.post('/db/lists', options, (data) => {
       this.setState({ editMode: false });

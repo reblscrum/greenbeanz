@@ -311,6 +311,7 @@ label {
 
 .shownListName {
     /* text-align: center; */
+    margin-top: 5px;
     font-size: 30px;
     font-weight: bold;
     color: #3b4e5e;
@@ -353,8 +354,10 @@ label {
     color: #2d7e2f;
     font-weight: bold;
 }
-.listTitle {
+.listTitle a {
     font-size: 25px;
+    font-weight: bolder;
+    color: #3b4e5e;
 }
 
 .delete {
@@ -362,4 +365,32 @@ label {
     cursor: pointer;
     background-color: rgb(211, 78, 78);
     margin-right: 5px;
+    text-align: center;
+}
+
+#shopping {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    /* width: 100%; */
+}
+
+#shopping td, #shopping th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#shopping tr:nth-child(even){background-color: #f2f2f2;}
+
+#shopping tr:hover {background-color: #ddd;}
+
+#shopping tr:last-child {
+    font-weight: bold;
+  }
+
+#shopping th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #7bc57d;
+    color: white;
 }

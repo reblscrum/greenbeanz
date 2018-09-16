@@ -10,7 +10,6 @@ class UserList extends Component {
     };
     this.getItems = this.getItems.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.getTotal = this.getTotal.bind(this);
   }
   componentDidMount() {
     this.getItems();
@@ -22,21 +21,11 @@ class UserList extends Component {
     };
     $.post('/db/users/listItems', options, data => {
       this.setState({ items: data });
-      // console.log(this.state.items);
     });
   }
 
   handleClick() {
     this.setState({ clicked: !this.state.clicked });
-  }
-
-  getTotal() {
-    const grandTotal = this.state.items.reduce((total, item) => {
-      const number = Number(item.price);
-      total += number;
-      return total;
-    }, 0);
-    return Math.round(grandTotal * 100) / 100;
   }
 
   listTotal(store, list) {
@@ -50,7 +39,6 @@ class UserList extends Component {
   }
 
   generateTable(items) {
-    console.log(items);
     let row = [items[0].query, '---', '---', '---'];
     let rows = [];
     let wmTotal = 0;
@@ -76,9 +64,10 @@ class UserList extends Component {
       }
     }
     rows.push(row);
-    rows.push(['total', wmTotal, hebTotal, wfTotal]);
+    rows.push(['total', ('$' + wmTotal.toFixed(2)), ('$' + hebTotal.toFixed(2)), ('$' + wfTotal.toFixed(2))]);
+    
     return (
-      <table>
+      <table id='shopping'>
         <tbody>
           <tr>
             <th>Item Name</th>
@@ -100,15 +89,13 @@ class UserList extends Component {
   }
 
   render() {
-    // console.log('Here are props in Userlist', this.props);
-    // console.log('here is this.state.items', this.state.items);
     if (!this.state.clicked) {
       return (
         <div className="savedList" onClick={this.handleClick}>
-          <div className="listTitle" style={{ fontWeight: 'bold' }}>
+          <div className="listTitle" >
             {' '}
-            <em> {this.props.list.name}
-            </em>{' '}
+            <a> {this.props.list.name}
+            </a>{' '}
           </div>
           <div className="listTotals">
             <a className="listWalmart"> <em>Walmart: </em> ${this.listTotal('Walmart', this.state.items)}</a>

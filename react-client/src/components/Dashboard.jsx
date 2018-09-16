@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
       );
     } else if (this.state.currentScreen === 'cart') {
       return <Cart shoppingList={this.props.shoppingList} finalQuery={this.props.finalQuery} query={this.props.query} walmart={this.props.walmart} heb={this.props.heb} wholeFoods={this.props.wholeFoods} changeScreen={this.changeScreen.bind(this)} 
-        handleInput={this.props.handleInput} search={this.props.search} saveList={this.props.saveList} addItem={this.props.addItem} showItems={this.state.showItems} showMore={this.handleShowMore.bind(this)}
+        handleInput={this.props.handleInput} search={this.props.search} addItem={this.props.addItem} showItems={this.state.showItems} showMore={this.handleShowMore.bind(this)}
         showLess={this.handleShowLess.bind(this)} titles={this.state.storeTitles} changeScreen={this.changeScreen.bind(this)} reset={this.reset.bind(this)} 
         wmTotal={this.props.wmTotal} hebTotal={this.props.hebTotal} wfTotal={this.props.wfTotal} calculator={this.props.calculator} getLists={this.getLists} createNewList={this.props.createNewList}
       />;
